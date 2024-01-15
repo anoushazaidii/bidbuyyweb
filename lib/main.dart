@@ -1,11 +1,9 @@
-import 'package:apiintegration/core/utils/pref_utils.dart';
-import 'package:apiintegration/localization/app_localization.dart';
-import 'package:apiintegration/presentation/signup_mob_screen.dart';
-import 'package:apiintegration/theme/theme_helper.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/app_export.dart';
 import 'core/utils/size_utils.dart';
+import 'presentation/signup_mob_screen.dart';
 
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();

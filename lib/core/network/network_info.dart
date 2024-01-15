@@ -1,6 +1,7 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 
 // For checking internet connectivity
+import 'package:bidbuyweb/core/app_export.dart';
+
 abstract class NetworkInfoI {
   Future<bool> isConnected();
 

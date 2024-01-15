@@ -1,5 +1,4 @@
-import 'package:apiintegration/presentation/signup_mob_screen.dart';
-import 'package:apiintegration/routes/routes_name.dart';
+import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../core/app_export.dart';

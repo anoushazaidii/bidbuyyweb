@@ -216,6 +216,8 @@ class PrimaryColors {
 
   // Red
   Color get red600 => const Color(0XFFDB4444);
+ Color get gray90001 => const Color(0XFF212427);
+
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();

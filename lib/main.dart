@@ -1,4 +1,6 @@
 
+import 'package:bidbuyweb/presentation/seller_view/seller_otp_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/app_export.dart';
@@ -45,7 +47,7 @@ class MyApp extends StatelessWidget {
                     '',
                   ),
                 ],
-                home: SignupMobScreen(),
+                home: const SellerProfileMobScreen(),
                 
               );
             },

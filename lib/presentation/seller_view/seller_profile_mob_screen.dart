@@ -172,10 +172,16 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                   SizedBox(height: 19.v),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.h),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         // Add your widgets here
+                        UploadPicWidget(
+                          text: "lbl_id_card_front".tr,
+                        ),
+                        UploadPicWidget(
+                          text: "lbl_id_card_back".tr,
+                        )
                       ],
                     ),
                   ),
@@ -207,4 +213,48 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
   // Widget _buildFrame(BuildContext context) {
   //   // Remaining code for _buildFrame
   // }
+}
+
+class UploadPicWidget extends StatelessWidget {
+  String text;
+  UploadPicWidget({
+    required this.text,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Padding(
+        padding: EdgeInsets.only(right: 12.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Opacity(
+              opacity: 0.4,
+              child: Text(
+                text,
+                style: CustomTextStyles.bodyLargePoppinsGray90001,
+              ),
+            ),
+            SizedBox(height: 1.v),
+            Container(
+              height: 40.v,
+              width: 150.h,
+              padding: EdgeInsets.symmetric(vertical: 7.v),
+              decoration: AppDecoration.outlineGray.copyWith(
+                borderRadius: BorderRadiusStyle.roundedBorder4,
+              ),
+              child: CustomImageView(
+                imagePath: ImageConstant.imgMaterialSymbolsUploadSharp,
+                height: 24.adaptSize,
+                width: 24.adaptSize,
+                alignment: Alignment.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

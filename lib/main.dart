@@ -4,8 +4,6 @@ import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dar
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'core/app_export.dart';
-import 'core/utils/size_utils.dart';
-import 'presentation/signup_mob_screen.dart';
 
 
 var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();

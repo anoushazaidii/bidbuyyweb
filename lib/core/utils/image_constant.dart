@@ -18,6 +18,10 @@ class ImageConstant {
   static String imgCategorySmartwatch =
       '$imagePath/img_category_smartwatch.svg';
 
+  // seller profile mob images
+  static String imgMaterialSymbolsUploadSharp =
+      '$imagePath/img_material_symbols_upload_sharp.svg';
+
   // Product Mob images
   static String imgImage8386x358 = '$imagePath/img_image_8_386x358.png';
 

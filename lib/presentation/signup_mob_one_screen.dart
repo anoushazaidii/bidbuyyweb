@@ -1,3 +1,4 @@
+import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/facebookauth/facebook_auth_helper.dart';
 
@@ -5,6 +6,7 @@ import 'package:bidbuyweb/widgets/custom_checkbox_button.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SignupMobileScreen extends StatefulWidget {
@@ -17,6 +19,10 @@ class SignupMobileScreen extends StatefulWidget {
 // ignore_for_file: must_be_immutable
 class SignupMobileScreenState extends State<SignupMobileScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool isSigningUp = false;
+  final FirebaseAuthService _auth = FirebaseAuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,6 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
                 ])))));
   }
 
-
   /// Section Widget
   Widget _buildFrameEmail(BuildContext context) {
     return Padding(
@@ -61,7 +66,9 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
           SizedBox(height: 5.v),
           Padding(
             padding: EdgeInsets.only(left: 1.h),
-            child: CustomTextFormField(),
+            child: CustomTextFormField(
+              controller: _emailController,
+            ),
           )
         ]));
   }
@@ -86,7 +93,8 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
           SizedBox(height: 5.v),
           Padding(
             padding: EdgeInsets.only(left: 1.h),
-            child: CustomTextFormField(obscureText: true),
+            child: CustomTextFormField(
+                obscureText: true, controller: _passwordController),
           )
         ]));
   }
@@ -112,8 +120,7 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: CustomTextFormField(
-                // controller: confirmpasswordController,
-                obscureText: true),
+                controller: _passwordController, obscureText: true),
           )
         ]));
   }
@@ -151,6 +158,9 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
                       )),
                   SizedBox(height: 12.v),
                   CustomElevatedButton(
+                      onPressed: () {
+                        _signUp();
+                      },
                       height: 35.v,
                       width: 320.v,
                       text: "lbl_register".tr,
@@ -221,5 +231,28 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(onError.toString())));
     });
+  }
+
+  void _signUp() async {
+    setState(() {
+      isSigningUp = true;
+    });
+
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    setState(() {
+      isSigningUp = false;
+    });
+
+    if (user != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("User created")));
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Can not create user")));
+    }
   }
 }

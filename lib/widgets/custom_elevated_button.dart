@@ -1,4 +1,3 @@
-
 import 'package:bidbuyweb/core/utils/size_utils.dart';
 import 'package:bidbuyweb/widgets/base_button.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +5,8 @@ import 'package:flutter/material.dart';
 import '../theme/custom_text_style.dart';
 
 class CustomElevatedButton extends BaseButton {
-  CustomElevatedButton({super.key, 
+  CustomElevatedButton({
+    super.key,
     // Key? key,
     this.decoration,
     this.leftIcon,

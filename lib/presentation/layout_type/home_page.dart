@@ -1,3 +1,4 @@
+import 'package:bidbuyweb/presentation/Desktop/homepage_desk_screen.dart';
 import 'package:bidbuyweb/presentation/homepage_mob_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -10,7 +11,7 @@ class Homepage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenTypeLayout.builder(
       mobile: (context) => const HomepageMobScreen(),
-      //desktop: ,
+      desktop: (context) => const HomepageDeskScreen(),
     );
   }
 }

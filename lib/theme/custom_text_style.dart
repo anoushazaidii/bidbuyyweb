@@ -11,6 +11,25 @@ class CustomTextStyles {
       theme.textTheme.bodyLarge!.poppins.copyWith(
         color: appTheme.black900.withOpacity(0.53),
       );
+
+  static get bodyMediumPoppinsGray90001 =>
+      theme.textTheme.bodyMedium!.poppins.copyWith(
+        color: appTheme.gray90001,
+      );
+  static get bodyLargePoppinsGray90001 =>
+      theme.textTheme.bodyLarge!.poppins.copyWith(
+        color: appTheme.gray90001.withOpacity(0.49),
+      );
+  static get bodyMediumGray90001 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray90001,
+      );
+
+  static get bodyMediumGray900 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray900,
+      );
+  static get bodyMediumBlack900_2 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.black900.withOpacity(0.6),
+      );
   static get bodyLargePoppinsBlack900_1 =>
       theme.textTheme.bodyLarge!.poppins.copyWith(
         color: appTheme.black900,
@@ -35,9 +54,9 @@ class CustomTextStyles {
   static get bodyMediumGray70001 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.gray70001,
       );
-  static get bodyMediumGray900 => theme.textTheme.bodyMedium!.copyWith(
-        color: appTheme.gray900,
-      );
+  // static get bodyMediumGray900 => theme.textTheme.bodyMedium!.copyWith(
+  //       color: appTheme.gray900,
+  //     );
   static get bodyMediumInterBlack900 =>
       theme.textTheme.bodyMedium!.inter.copyWith(
         color: appTheme.black900,

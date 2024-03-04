@@ -20,6 +20,54 @@ final Map<String, String> enUs = {
       "Discover treasures at BidBuyy - where bidding meets buying. Join online auctions and find unique items to buy and sell with excitement!",
   "msg_your_gateway_to": "YOUR GATEWAY TO EXCITING AUCTIONS",
 
+  // Signup mob One Screen
+  "msg_confirm_password": "Confirm Password*",
+  "msg_confirm_password2": "Confirm Password",
+  "msg_i_accept_terms_and": "I accept terms and conditions",
+
+  // Signup mob Screen
+  "lbl_login": "Login", "lbl_remember_me": "Remember me",
+
+  // Seller OTP mob Screen
+  "lbl_otp": "OTP", "lbl_verify": "Verify",
+  "msg_the_code_will_be": "The code will be sent via sms",
+
+  // seller profile mob Screen
+  "lbl_id_card_back": "Id card back",
+  "lbl_id_card_front": "Id card front",
+  "lbl_name": "Name*",
+  "lbl_name2": "Name",
+  "lbl_phone": "Phone*",
+  "lbl_phone2": "Phone",
+  "msg_profile_information": "Profile Information",
+
+  // Seller Adress mob Screen
+  "lbl_pakistan": "Pakistan",
+  "lbl_select_area": "Select area",
+  "lbl_select_state": "Select state",
+  "msg_address_information": "Address Information",
+  "msg_enter_complete_address": "Enter complete address here",
+
+  // Seller Account mob Screen
+  "lbl_account_number": "Account Number*",
+  "lbl_account_number2": "Account Number",
+  "lbl_bank": "Bank",
+  "lbl_branch_code": "Branch Code*",
+  "lbl_branch_code2": "Branch Code",
+  "lbl_full_name": "Full Name*",
+  "lbl_full_name2": "Full Name",
+  "lbl_iban": "IBAN*",
+  "lbl_iban2": "IBAN",
+  "msg_account_information": "Account Information",
+
+  // Seller verify mob Screen
+  "lbl_verification": "Verification",
+  "msg_please_wait_for": "Please wait for your confirmation mail.",
+
+  // Seller Add Product mob Screen
+  "lbl_add_products": "Add products", "lbl_get_started": "Get Started",
+  "msg_add_your_first_product": "Add your first product to sell",
+
   // VIew all Mob Screen
   "lbl_ongoingauctions": "OngoingAuctions",
 
@@ -27,7 +75,6 @@ final Map<String, String> enUs = {
   "lbl_150_reviews": "(150 Reviews)",
   "lbl_4_1": "4.1",
   "lbl_contact": "Contact",
-  "lbl_delivery": "Delivery",
   "lbl_kaif_khawaja": "Kaif Khawaja",
   "lbl_other_products": "Other products",
   "lbl_rs_192_00": "RS.192,00",
@@ -54,14 +101,41 @@ final Map<String, String> enUs = {
   "lbl_your_max_bid": "Your max bid",
   "msg_enter_pkr_1000_or": "Enter PKR 1000 or more",
 
-  // Signup mob One Screen
-  "lbl_create_account": "Create Account",
-  "msg_confirm_password": "Confirm Password*",
-  "msg_confirm_password2": "Confirm Password",
-  "msg_i_accept_terms_and": "I accept terms and conditions",
+  // Seller Product Description mob Screen
+  "lbl_0": "   0",
+  "lbl_38_60": "38/60",
+  "lbl_availability": "Availability",
+  "lbl_height_mm": "Height [mm]",
+  "lbl_initial_price": "Initial price",
+  "lbl_length_mm": "Length [mm]",
+  "lbl_product_price": "Product price ",
+  "lbl_width_mm": "Width [mm]",
+  "msg_dimensions_optional": "Dimensions (optional)",
+  "msg_fill_in_the_basic": "Fill in the basic information about your item ",
+  "msg_graphic_card_gigabyte": "Graphic card GIGABYTE GeForce ",
+  "msg_number_of_units": "Number of units available",
+  "msg_the_nvidia_rtx_3050":
+      "The NVIDIA RTX 3050 graphics card is a design equipped with 8GB of GDDR6 memory, supports PCI-E 4.0 and offers a number of unique technologies from NVIDIA to enhance the smoothness and high quality of generated graphics. At the same time, it provides support for Ray Tracing, allowing you to enjoy photorealistic graphics.",
 
-  // Signup mob Screen
-  "lbl_login": "Login", "lbl_remember_me": "Remember me",
+  // Add product photos mob Screen
+  "lbl_20_24_mb": "20/24 Mb",
+  "lbl_87": "87%",
+  "lbl_jpg_png_gif": "Jpg, Png, Gif",
+  "lbl_max_size_25mb": "Max size -25Mb.\n",
+  "lbl_upload_a_photo": "Upload \na photo",
+  "msg_add_product_photos": "Add product photos (max 10)",
+  "msg_max_size_25mb_jpg": "Max size -25Mb.\nJpg, Png, Gif",
+
+  // Add product delivery mob Screen
+  "lbl_online_payment": "Online payment",
+  "lbl_self_pickup": "Self pickup",
+  "lbl_shipping_time": "Shipping time",
+  "lbl_specify_a_date": "Specify a date",
+  "msg_courier_cash_on": "Courier cash on delivery",
+  "msg_select_delivery": "Select delivery options",
+
+  // Seller dashboard mob Screen
+  "lbl_your_products": "Your Products",
 
   // Common String
   "lbl": "*",
@@ -69,34 +143,45 @@ final Map<String, String> enUs = {
   "lbl_1": "1",
   "lbl_10": "10",
   "lbl_2": "2",
+  "lbl_24_mb": "24 Mb",
   "lbl_3_bids": "3 bids",
   "lbl_3_bids2": "(3 bids)",
   "lbl_45": "45",
   "lbl_9": "9",
-  "lbl_auction": "Auction",
+  "lbl_account": "Account",
+  "lbl_add_product": "Add Product",
   "lbl_bid_now": "Bid Now",
+  "lbl_categories": "Categories",
   "lbl_category": "Category",
   "lbl_company": "Company",
+  "lbl_create_account": "Create Account",
+  "lbl_dashboard": "Dashboard",
+  "lbl_delivery": "Delivery",
+  "lbl_description": "Description",
   "lbl_email": "Email*",
   "lbl_email2": "Email",
   "lbl_faq": "FAQ",
   "lbl_help": "HELP",
+  "lbl_home": "Home",
   "lbl_next": "Next",
   "lbl_or_sign_up_with": "Or sign up with",
   "lbl_password": "Password*",
   "lbl_password2": "Password",
+  "lbl_photos": "Photos",
   "lbl_previous": "Previous",
   "lbl_product_name": "Product name",
   "lbl_register": "Register",
   "lbl_resources": "RESOURCES",
   "lbl_rs_120": "Rs.120",
+  "lbl_sell": "Sell",
   "lbl_seller_name": "(Seller name)",
   "lbl_sign_up_now": "Sign Up Now",
+  "lbl_xyz_name_jpg": " XYZ name.jpg",
   "msg_about_features":
       "About          \n\nFeatures          \n\nWorks          \n\nCareer  ",
   "msg_account_manage": "Account\n\nManage Deliveries\n\nOrders\n\nPayment",
   "msg_customer_support_delivery":
-      "Customer Support\n Delivery Details\n\nTerms & Conditions\n\nPrivacy Policy",
+      "Customer Support\nDelivery Details\n\nTerms & Conditions\n\nPrivacy Policy",
   "msg_enter_your_email": "Enter your email address",
   "msg_free_ebook_development":
       "Free eBook\n\nDevelopment Tutorial\n\nHow to - Blog\n\nYoutube Playlist",
@@ -119,4 +204,5 @@ final Map<String, String> enUs = {
 
   // Validation Error String
   "err_msg_please_enter_valid_email": "Please enter valid email",
+  "err_msg_please_enter_valid_number": "Please enter valid number",
 };

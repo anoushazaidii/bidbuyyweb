@@ -12,6 +12,21 @@ class CustomTextStyles {
         color: appTheme.black900.withOpacity(0.53),
       );
 
+  static get robotoGray90001 => TextStyle(
+        color: appTheme.gray90001,
+        fontSize: 5.fSize,
+        fontWeight: FontWeight.w500,
+      ).roboto;
+  static get bodyLargePoppinsGray700 =>
+      theme.textTheme.bodyLarge!.poppins.copyWith(
+        color: appTheme.gray700,
+      );
+      
+  static get titleLargePoppinsGray700 =>
+      theme.textTheme.titleLarge!.poppins.copyWith(
+        color: appTheme.gray700,
+        fontWeight: FontWeight.w400,
+      );
   static get bodyMediumPoppinsGray90001 =>
       theme.textTheme.bodyMedium!.poppins.copyWith(
         color: appTheme.gray90001,

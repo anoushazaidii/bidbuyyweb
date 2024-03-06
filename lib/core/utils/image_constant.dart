@@ -2,6 +2,8 @@ class ImageConstant {
   // Image folder path
   static String imagePath = 'assets/images';
 
+  static String imgArrowdown = '$imagePath/img_arrowdown.svg';
+
   // Homepage mob One images
   static String imgPs5SlimGoedko = '$imagePath/img_ps5_slim_goedko.png';
 

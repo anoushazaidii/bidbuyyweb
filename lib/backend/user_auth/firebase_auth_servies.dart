@@ -1,5 +1,6 @@
 import 'dart:js';
 import 'package:bidbuyweb/domain/models/seller_model.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -62,6 +63,56 @@ class FirebaseAuthService {
         .doc(sellerModel.uid)
         .set(sellerModel.toMap(sellerModel));
   }
+ 
+    Future<void> sendOTP(String phoneNumber, Function(String) verificationIdCallback) async {
+    try {
+    print("SENDING OTP");
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await _auth.signInWithCredential(credential);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print("Verification Failed: ${e.message}");
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          print("Code Sent! Verification ID: $verificationId");
+          verificationIdCallback(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print("Code Auto-Retrieval Timeout! Verification ID: $verificationId");
+        },
+        
+      );
+      print("verification code sended");
+    } catch (e) {
+      print("Error sending OTP: $e");
+    }
+  }
+
+
+  Future<void> verifyOTP(String verificationId, String smsCode, BuildContext context) async {
+    try {
+      print("OTP IS VERIFYING");
+      // Create a PhoneAuthCredential with the code
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+      await _auth.signInWithCredential(credential);
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SellerProfileMobScreen()),
+      );
+      // Sign in the user with the credential
+      print(credential);
+    } catch (e) {
+      print("Error verifying OTP: $e");
+    }
+  }
+
+ 
   signInWitGoogle()async{
   print("eher");
   final GoogleSignIn _googleSignIn = GoogleSignIn();

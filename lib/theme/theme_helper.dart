@@ -203,6 +203,7 @@ class PrimaryColors {
 
   // Gray
   Color get gray200 => const Color(0XFFEFEFEF);
+  Color get gray100 => Color(0XFFF5F5F5);
   Color get gray20001 => const Color(0XFFF0EEED);
   Color get gray20002 => const Color(0XFFEDEBEC);
   Color get gray20003 => const Color(0XFFF2F0F1);

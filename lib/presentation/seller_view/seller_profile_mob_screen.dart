@@ -205,14 +205,6 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
       ),
     );
   }
-
-  // Widget _buildSubtraction(BuildContext context) {
-  //   // Remaining code for _buildSubtraction
-  // }
-
-  // Widget _buildFrame(BuildContext context) {
-  //   // Remaining code for _buildFrame
-  // }
 }
 
 class UploadPicWidget extends StatelessWidget {

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "520177186090",
+    "project_id": "bidbuyy",
+    "storage_bucket": "bidbuyy.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520177186090:android:4b29ef01ef8bd923869a53",
+        "android_client_info": {
+          "package_name": "com.example.bidbuyyweb"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZ81Lgdi1d7ifKS7C-t1s8_5EWNivr_n8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

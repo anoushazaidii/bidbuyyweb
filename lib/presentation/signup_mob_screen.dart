@@ -1,8 +1,11 @@
+import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/facebookauth/facebook_auth_helper.dart';
 import 'package:bidbuyweb/widgets/custom_checkbox_button.dart';
+import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/app_bar/appbar_title_image.dart';
 import 'package:flutter/material.dart';
 
@@ -22,7 +25,9 @@ class SignupMobScreenState extends State<SignupMobScreen> {
   TextEditingController passwordController = TextEditingController();
 
   TextEditingController emailController1 = TextEditingController();
-
+  bool _isSigning = false;
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   bool rememberMe = false;
 
@@ -129,14 +134,17 @@ class SignupMobScreenState extends State<SignupMobScreen> {
                         })
                   ),
           SizedBox(height: 18.v),
-          // CustomElevatedButton(
-          //     height: 35.v,
-          //     text: "lbl_register",
-          //     margin: EdgeInsets.only(right: 9.h),
-          //     buttonStyle: CustomButtonStyles.none,
-          //     decoration: CustomButtonStyles
-          //         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
-          //     buttonTextStyle: theme.textTheme.labelMedium!),
+          CustomElevatedButton(
+            onPressed: (){
+              _signIn();
+            },
+              height: 35.v,
+              text: "Login",
+              margin: EdgeInsets.only(right: 9.h),
+              buttonStyle: CustomButtonStyles.none,
+              decoration: CustomButtonStyles
+                  .gradientOnPrimaryContainerToPrimaryTL17Decoration,
+              buttonTextStyle: theme.textTheme.labelMedium!),
           SizedBox(height: 16.v),
           Padding(
               padding: EdgeInsets.only(right: 9.h),
@@ -160,6 +168,10 @@ class SignupMobScreenState extends State<SignupMobScreen> {
           SizedBox(height: 12.v),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             CustomIconButton(
+              onTap: (){
+                print("signing in with google");
+                FirebaseAuthService().signInWitGoogle();
+              },
                 height: 41.adaptSize,
                 width: 41.adaptSize,
                 padding: EdgeInsets.all(6.h),
@@ -206,4 +218,29 @@ class SignupMobScreenState extends State<SignupMobScreen> {
           .showSnackBar(SnackBar(content: Text(onError.toString())));
     });
   }
+
+void _signIn() async {
+    setState(() {
+      _isSigning = true;
+    });
+
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    setState(() {
+      _isSigning = false;
+    });
+
+    if (user != null) {
+ ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("successfuly logged in")));
+    } else {
+   ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("invalid")));
+      }
+  }
+
+
 }

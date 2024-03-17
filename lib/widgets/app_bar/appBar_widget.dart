@@ -1,10 +1,7 @@
 
 import 'package:bidbuyweb/core/app_export.dart';
-import 'package:bidbuyweb/widgets/app_bar/appbar_leading_image.dart';
 import 'package:bidbuyweb/widgets/app_bar/appbar_title_image.dart';
-import 'package:bidbuyweb/widgets/app_bar/appbar_trailing_image.dart';
 import 'package:flutter/material.dart';
-import 'custom_app_bar.dart';
 
 // ignore: must_be_immutable
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
@@ -27,7 +24,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
           ),
         ),
         title: AppbarTitleImage(
-          imagePath: ImageConstant.imgTextGray900,
+          imagePath: ImageConstant.imgTextGray90001,
           margin: EdgeInsets.only(left: 16.h),
         ),
         actions: [

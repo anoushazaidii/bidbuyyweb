@@ -1,5 +1,8 @@
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/provider/seller_account_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/seller_account_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/provider/seller_product_description_mob_provider.dart';
+import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/seller_product_description_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_add_product.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/provider/seller_adress_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/seller_adress_mob_screen.dart';
@@ -47,6 +50,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ThemeProvider()),
             ChangeNotifierProvider(create: (_) => SellerAdressMobProvider()),
             ChangeNotifierProvider(create: (_) => SellerAccountMobProvider()),
+            
+            ChangeNotifierProvider(create: (_) => SellerProductDescriptionMobProvider()),
           ],
           child: MaterialApp(
             theme: theme,
@@ -65,7 +70,8 @@ class MyApp extends StatelessWidget {
                 '',
               ),
             ],
-            home: const SellerOtpMobScreen(),
+            home: const AddProductPhotosMobScreen(),
+
           ),
         );
       },

@@ -1,13 +1,12 @@
-import 'package:bidbuyweb/core/utils/size_utils.dart';
-import 'package:bidbuyweb/theme/custom_text_style.dart';
-import 'package:bidbuyweb/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
+import '../core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
     Key? key,
     this.alignment,
     this.width,
+    this.scrollPadding,
     this.controller,
     this.focusNode,
     this.autofocus = true,
@@ -25,8 +24,9 @@ class CustomTextFormField extends StatelessWidget {
     this.contentPadding,
     this.borderDecoration,
     this.fillColor,
-    this.filled = true,
-    this.validator,  initialValue,  Null Function(dynamic value)? onChanged,
+    this.filled = false,
+    this.validator,
+
   }) : super(
           key: key,
         );
@@ -34,6 +34,8 @@ class CustomTextFormField extends StatelessWidget {
   final Alignment? alignment;
 
   final double? width;
+
+  final TextEditingController? scrollPadding;
 
   final TextEditingController? controller;
 
@@ -78,18 +80,20 @@ class CustomTextFormField extends StatelessWidget {
     return alignment != null
         ? Align(
             alignment: alignment ?? Alignment.center,
-            child: textFormFieldWidget,
+            child: textFormFieldWidget(context),
           )
-        : textFormFieldWidget;
+        : textFormFieldWidget(context);
   }
 
-  Widget get textFormFieldWidget => SizedBox(
+  Widget textFormFieldWidget(BuildContext context) => SizedBox(
         width: width ?? double.maxFinite,
         child: TextFormField(
+          scrollPadding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           controller: controller,
           focusNode: focusNode ?? FocusNode(),
           autofocus: autofocus!,
-          style: textStyle ?? CustomTextStyles.bodyMediumBlack900,
+          style: textStyle ?? CustomTextStyles.bodyLargeGray700,
           obscureText: obscureText!,
           textInputAction: textInputAction,
           keyboardType: textInputType,
@@ -112,25 +116,47 @@ class CustomTextFormField extends StatelessWidget {
               right: 12.h,
               bottom: 12.v,
             ),
-        fillColor: fillColor ?? theme.colorScheme.onPrimary.withOpacity(1),
+        fillColor: fillColor,
         filled: filled,
         border: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(21.h),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(4.h),
+              borderSide: BorderSide(
+                color: appTheme.gray90001.withOpacity(0.5),
+                width: 1,
+              ),
             ),
         enabledBorder: borderDecoration ??
             OutlineInputBorder(
-              borderRadius: BorderRadius.circular(21.h),
-              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(4.h),
+              borderSide: BorderSide(
+                color: appTheme.gray90001.withOpacity(0.5),
+                width: 1,
+              ),
             ),
         focusedBorder: borderDecoration ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(4.h),
               borderSide: BorderSide(
-                color: appTheme.gray900.withOpacity(0.5),
+                color: appTheme.gray700,
                 width: 1,
               ),
             ),
+      );
+}
+
+/// Extension on [CustomTextFormField] to facilitate inclusion of all types of border style etc
+extension TextFormFieldStyleHelper on CustomTextFormField {
+  static OutlineInputBorder get fillOnPrimary => OutlineInputBorder(
+        borderRadius: BorderRadius.circular(21.h),
+        borderSide: BorderSide.none,
+      );
+  static OutlineInputBorder get fillGray => OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.h),
+        borderSide: BorderSide.none,
+      );
+  static OutlineInputBorder get fillGrayTL8 => OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8.h),
+        borderSide: BorderSide.none,
       );
 }

@@ -26,7 +26,7 @@ class CustomTextFormField extends StatelessWidget {
     this.borderDecoration,
     this.fillColor,
     this.filled = true,
-    this.validator,
+    this.validator,  initialValue,  Null Function(dynamic value)? onChanged,
   }) : super(
           key: key,
         );

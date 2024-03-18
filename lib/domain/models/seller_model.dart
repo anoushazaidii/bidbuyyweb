@@ -30,7 +30,7 @@ class SellerModel {
     required this.email,
     required this.idCardFrontImage,
     required this.idCardBackImage,
-    required this.country,
+     required this.country,
     required this.state,
     required this.area,
     required this.address,

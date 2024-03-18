@@ -1,4 +1,6 @@
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/presentation/seller_account_mob_screen/seller_account_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:bidbuyweb/widgets/app_bar/appbar_title_image.dart';
 import 'package:bidbuyweb/widgets/custom_drop_down.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
@@ -9,27 +11,30 @@ import 'package:flutter/material.dart';
 import 'provider/seller_adress_mob_provider.dart';
 
 class SellerAdressMobScreen extends StatefulWidget {
-  const SellerAdressMobScreen({Key? key})
-      : super(
-          key: key,
-        );
+  final SellerProfile sellerProfile;
+
+  const SellerAdressMobScreen({Key? key, required this.sellerProfile})
+      : super(key: key);
 
   @override
   SellerAdressMobScreenState createState() => SellerAdressMobScreenState();
-  static Widget builder(BuildContext context) {
+
+  static Widget builder(BuildContext context, SellerProfile sellerProfile) {
     return ChangeNotifierProvider(
       create: (context) => SellerAdressMobProvider(),
-      child: SellerAdressMobScreen(),
+      child: SellerAdressMobScreen(sellerProfile: sellerProfile),
     );
   }
 }
 
 class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  late TextEditingController _addressController;
 
   @override
   void initState() {
     super.initState();
+    _addressController = TextEditingController();
   }
 
   @override
@@ -44,7 +49,6 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
             padding: EdgeInsets.only(top: 15.v),
             child: Column(
               children: [
-                // _buildAppBarRow(context),
                 SizedBox(height: 20.v),
                 SizedBox(
                   height: 1600.v,
@@ -53,8 +57,6 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                     alignment: Alignment.bottomCenter,
                     children: [
                       _buildAddressColumn(context),
-                      // _buildSubtractionColumn(context),
-                      // _buildFrameColumn(context),
                     ],
                   ),
                 ),
@@ -66,7 +68,6 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 32.v,
@@ -91,7 +92,7 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
       styleType: Style.bgGradientnameonPrimaryContainernameprimary,
     );
   }
-  /// Section Widget
+
   Widget _buildAddressColumn(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
@@ -144,132 +145,19 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                     style: CustomTextStyles.headlineLargePrimary,
                   ),
                   SizedBox(height: 42.v),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 5.h,
-                      right: 6.h,
-                    ),
-                    child: Selector<SellerAdressMobProvider,
-                        SellerAdressMobModel?>(
-                      selector: (
-                        context,
-                        provider,
-                      ) =>
-                          provider.sellerAdressMobModelObj,
-                      builder: (context, sellerAdressMobModelObj, child) {
-                        return CustomDropDown(
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize,
-                            ),
-                          ),
-                          hintText: "lbl_pakistan".tr,
-                          items:
-                              sellerAdressMobModelObj?.dropdownItemList ?? [],
-                          onChanged: (value) {
-                            context
-                                .read<SellerAdressMobProvider>()
-                                .onSelected(value);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 16.v),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 5.h,
-                      right: 6.h,
-                    ),
-                    child: Selector<SellerAdressMobProvider,
-                        SellerAdressMobModel?>(
-                      selector: (
-                        context,
-                        provider,
-                      ) =>
-                          provider.sellerAdressMobModelObj,
-                      builder: (context, sellerAdressMobModelObj, child) {
-                        return CustomDropDown(
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize,
-                            ),
-                          ),
-                          hintText: "lbl_select_state".tr,
-                          items:
-                              sellerAdressMobModelObj?.dropdownItemList1 ?? [],
-                          onChanged: (value) {
-                            context
-                                .read<SellerAdressMobProvider>()
-                                .onSelected1(value);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 16.v),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 5.h,
-                      right: 6.h,
-                    ),
-                    child: Selector<SellerAdressMobProvider,
-                        SellerAdressMobModel?>(
-                      selector: (
-                        context,
-                        provider,
-                      ) =>
-                          provider.sellerAdressMobModelObj,
-                      builder: (context, sellerAdressMobModelObj, child) {
-                        return CustomDropDown(
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize,
-                            ),
-                          ),
-                          hintText: "lbl_select_area".tr,
-                          items:
-                              sellerAdressMobModelObj?.dropdownItemList2 ?? [],
-                          onChanged: (value) {
-                            context
-                                .read<SellerAdressMobProvider>()
-                                .onSelected2(value);
-                          },
-                        );
-                      },
-                    ),
-                  ),
+                  _buildDropDowns(context),
                   SizedBox(height: 16.v),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 5.h),
-                    child: Selector<SellerAdressMobProvider,
-                        TextEditingController?>(
-                      selector: (
-                        context,
-                        provider,
-                      ) =>
-                          provider.addressController,
-                      builder: (context, addressController, child) {
-                        return CustomTextFormField(
-                          controller: addressController,
-                          hintText: "msg_enter_complete_address".tr,
-                          hintStyle: CustomTextStyles.bodyLargePoppinsGray700,
-                          maxLines: 3,
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 16.h,
-                            vertical: 15.v,
-                          ),
-                        );
-                      },
+                    child: CustomTextFormField(
+                      controller: _addressController,
+                      hintText: "msg_enter_complete_address".tr,
+                      hintStyle: CustomTextStyles.bodyLargePoppinsGray700,
+                      maxLines: 3,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16.h,
+                        vertical: 15.v,
+                      ),
                     ),
                   ),
                   SizedBox(height: 27.v),
@@ -281,6 +169,9 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
+                    onPressed: () {
+                      _submit();
+                    },
                   ),
                   SizedBox(height: 28.v),
                 ],
@@ -292,4 +183,134 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
       ),
     );
   }
+
+  Widget _buildDropDowns(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 5.h,
+        right: 6.h,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+            selector: (
+              context,
+              provider,
+            ) =>
+                provider.sellerAdressMobModelObj,
+            builder: (context, sellerAdressMobModelObj, child) {
+              return CustomDropDown(
+                icon: Container(
+                  margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgArrowdown,
+                    height: 24.adaptSize,
+                    width: 24.adaptSize,
+                  ),
+                ),
+                hintText: "lbl_pakistan".tr,
+                items: sellerAdressMobModelObj?.dropdownItemList ?? [],
+                onChanged: (value) {
+                  context.read<SellerAdressMobProvider>().onSelected(value);
+                },
+              );
+            },
+          ),
+          SizedBox(height: 16.v),
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+            selector: (
+              context,
+              provider,
+            ) =>
+                provider.sellerAdressMobModelObj,
+            builder: (context, sellerAdressMobModelObj, child) {
+              return CustomDropDown(
+                icon: Container(
+                  margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgArrowdown,
+                    height: 24.adaptSize,
+                    width: 24.adaptSize,
+                  ),
+                ),
+                hintText: "lbl_select_state".tr,
+                items: sellerAdressMobModelObj?.dropdownItemList1 ?? [],
+                onChanged: (value) {
+                  context.read<SellerAdressMobProvider>().onSelected1(value);
+                },
+              );
+            },
+          ),
+          SizedBox(height: 16.v),
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+            selector: (
+              context,
+              provider,
+            ) =>
+                provider.sellerAdressMobModelObj,
+            builder: (context, sellerAdressMobModelObj, child) {
+              return CustomDropDown(
+                icon: Container(
+                  margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+                  child: CustomImageView(
+                    imagePath: ImageConstant.imgArrowdown,
+                    height: 24.adaptSize,
+                    width: 24.adaptSize,
+                  ),
+                ),
+                hintText: "lbl_select_area".tr,
+                items: sellerAdressMobModelObj?.dropdownItemList2 ?? [],
+                onChanged: (value) {
+                  context.read<SellerAdressMobProvider>().onSelected2(value);
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      // Combine data from the previous screen and this screen
+      final combinedModel = CombinedModel(
+        sellerProfile: widget.sellerProfile,
+        country: 'Pakistan', // Example: Replace with selected country
+        state: 'Punjab', // Example: Replace with selected state
+        area: 'Lahore', // Example: Replace with selected area
+        fullAddress: _addressController.text,
+      );
+
+      // Navigate to the account info screen passing the combined model
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SellerAccountMobScreen(combinedModel: combinedModel),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _addressController.dispose();
+    super.dispose();
+  }
+}
+class CombinedModel {
+  final SellerProfile sellerProfile;
+  final String country;
+  final String state;
+  final String area;
+  final String fullAddress;
+
+  CombinedModel({
+    required this.sellerProfile,
+    required this.country,
+    required this.state,
+    required this.area,
+    required this.fullAddress,
+  });
 }

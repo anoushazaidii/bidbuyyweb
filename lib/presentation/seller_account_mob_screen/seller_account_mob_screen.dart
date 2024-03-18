@@ -1,6 +1,11 @@
+import 'dart:math';
+
+import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/domain/models/seller_model.dart';
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/models/seller_account_mob_model.dart';
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/provider/seller_account_mob_provider.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/seller_adress_mob_screen.dart';
 import 'package:bidbuyweb/widgets/app_bar/appBar_widget.dart';
 import 'package:bidbuyweb/widgets/custom_drop_down.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
@@ -8,20 +13,26 @@ import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 
 class SellerAccountMobScreen extends StatefulWidget {
-  const SellerAccountMobScreen({Key? key})
-      : super(
-          key: key,
-        );
+  final CombinedModel combinedModel; // Accept combined model as parameter
+
+  const SellerAccountMobScreen({Key? key, required this.combinedModel})
+      : super(key: key);
 
   @override
   SellerAccountMobScreenState createState() => SellerAccountMobScreenState();
-  static Widget builder(BuildContext context) {
-    return const SellerAccountMobScreen();
+  static Widget builder(BuildContext context, CombinedModel combinedModel) {
+    return SellerAccountMobScreen(combinedModel: combinedModel);
   }
 }
 
 class SellerAccountMobScreenState extends State<SellerAccountMobScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  TextEditingController ibanController = TextEditingController();
+  TextEditingController accountNumberController = TextEditingController();
+  TextEditingController branchCodeController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  String selectedBank = '';
+  final FirebaseAuthService authService = FirebaseAuthService();
 
   @override
   void initState() {
@@ -40,14 +51,11 @@ class SellerAccountMobScreenState extends State<SellerAccountMobScreen> {
             padding: EdgeInsets.only(top: 15.v),
             child: Column(
               children: [
-                // _buildAppBarRow(context),
                 SizedBox(height: 20.v),
                 SizedBox(
                   height: 1600.v,
                   width: double.maxFinite,
                   child: Column(
-                    // alignment: Alignment.bottomCenter,
-
                     children: [
                       _buildFullNameColumn(context),
                     ],
@@ -89,17 +97,8 @@ class SellerAccountMobScreenState extends State<SellerAccountMobScreen> {
           SizedBox(height: 5.v),
           Padding(
             padding: EdgeInsets.only(left: 6.h),
-            child: Selector<SellerAccountMobProvider, TextEditingController?>(
-              selector: (
-                context,
-                provider,
-              ) =>
-                  provider.fullNameController,
-              builder: (context, fullNameController, child) {
-                return CustomTextFormField(
-                  controller: fullNameController,
-                );
-              },
+            child: CustomTextFormField(
+              controller: TextEditingController(text: fullNameController.text),
             ),
           ),
         ],
@@ -250,7 +249,8 @@ class SellerAccountMobScreenState extends State<SellerAccountMobScreen> {
     return Align(
       alignment: Alignment.topCenter,
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 16.h,
+        padding: EdgeInsets.symmetric(
+          horizontal: 16.h,
           vertical: 17.v,
         ),
         decoration: AppDecoration.fillGray,
@@ -258,104 +258,51 @@ class SellerAccountMobScreenState extends State<SellerAccountMobScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  "lbl_sell".tr,
-                  style: CustomTextStyles.bodyMediumBlack900_2,
-                ),
-                CustomImageView(
-                  imagePath: ImageConstant.imgArrowRight,
-                  height: 14.adaptSize,
-                  width: 14.adaptSize,
-                  margin: EdgeInsets.only(left: 4.h),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 6.h),
-                  child: Text(
-                    "lbl_account".tr,
-                    style: CustomTextStyles.bodyMediumGray90001,
-                  ),
-                ),
-              ],
+            _buildAccountInformation(context),
+            _buildIban(context),
+            _buildAccountNumber(context),
+            _buildBranchCode(context),
+            CustomElevatedButton(
+              height: 35.v,
+              text: "lbl_next".tr,
+              margin: EdgeInsets.only(right: 9.h),
+              buttonStyle: CustomButtonStyles.none,
+              decoration: CustomButtonStyles
+                  .gradientOnPrimaryContainerToPrimaryTL17Decoration,
+              buttonTextStyle: theme.textTheme.labelMedium!,
+              onPressed: () {
+                SellerModel newModel = SellerModel(
+                  name: widget.combinedModel.sellerProfile.name,
+                  phone: widget.combinedModel.sellerProfile.phone,
+                  idCardBackImage:
+                      widget.combinedModel.sellerProfile.idCardBack,
+                  idCardFrontImage:
+                      widget.combinedModel.sellerProfile.idCardFront,
+                  uid: generateRandomUID(),
+                  fullName: fullNameController.text,
+                  iban: ibanController.text,
+                  accountNumber: accountNumberController.text,
+                  bank: selectedBank,
+                  branchCode: branchCodeController.text,
+                  email: widget.combinedModel.sellerProfile.email,
+                  country: widget.combinedModel.country,
+                  state: widget.combinedModel.state,
+                  area: widget.combinedModel.area,
+                  address: widget.combinedModel.fullAddress,
+                  deviceToken: "",
+                  profileImage: '',
+                );
+
+                authService.saveSellerDataToFirestore(newModel);
+              },
             ),
-            SizedBox(height: 18.v),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 12.h,
-                vertical: 27.v,
-              ),
-              decoration: AppDecoration.fillOnPrimary.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder19,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "msg_account_information".tr,
-                    style: CustomTextStyles.headlineLargePrimary,
-                  ),
-                  SizedBox(height: 29.v),
-                  _buildAccountInformation(context),
-                  SizedBox(height: 13.v),
-                  _buildIban(context),
-                  SizedBox(height: 13.v),
-                  _buildAccountNumber(context),
-                  SizedBox(height: 12.v),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: 6.h,
-                      right: 4.h,
-                    ),
-                    child: Selector<SellerAccountMobProvider,
-                        SellerAccountMobModel?>(
-                      selector: (
-                        context,
-                        provider,
-                      ) =>
-                          provider.sellerAccountMobModelObj,
-                      builder: (context, sellerAccountMobModelObj, child) {
-                        return CustomDropDown(
-                          icon: Container(
-                            margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgArrowdown,
-                              height: 24.adaptSize,
-                              width: 24.adaptSize,
-                            ),
-                          ),
-                          hintText: "lbl_bank".tr,
-                          items:
-                              sellerAccountMobModelObj?.dropdownItemList ?? [],
-                          onChanged: (value) {
-                            context
-                                .read<SellerAccountMobProvider>()
-                                .onSelected(value);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 13.v),
-                  _buildBranchCode(context),
-                  SizedBox(height: 16.v),
-                  CustomElevatedButton(
-                    height: 35.v,
-                    text: "lbl_next".tr,
-                    margin: EdgeInsets.only(right: 9.h),
-                    buttonStyle: CustomButtonStyles.none,
-                    decoration: CustomButtonStyles
-                        .gradientOnPrimaryContainerToPrimaryTL17Decoration,
-                    buttonTextStyle: theme.textTheme.labelMedium!,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 18.v),
           ],
         ),
       ),
     );
+  }
+
+  String generateRandomUID() {
+    return Random().nextInt(1000000).toString();
   }
 }

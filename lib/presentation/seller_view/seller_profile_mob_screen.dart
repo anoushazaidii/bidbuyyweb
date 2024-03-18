@@ -1,8 +1,26 @@
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/core/utils/validation_functions.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/seller_adress_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
+
+// Model to store seller profile information
+class SellerProfile {
+  final String name;
+  final String email;
+  final String phone;
+  final String idCardFront;
+  final String idCardBack;
+
+  SellerProfile({
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.idCardFront,
+    required this.idCardBack,
+  });
+}
 
 class SellerProfileMobScreen extends StatefulWidget {
   const SellerProfileMobScreen({Key? key}) : super(key: key);
@@ -18,9 +36,30 @@ class SellerProfileMobScreen extends StatefulWidget {
 class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  TextEditingController? _nameController;
+  TextEditingController? _emailController;
+  TextEditingController? _phoneController;
+  TextEditingController? _idCardFrontController;
+  TextEditingController? _idCardBackController;
+
   @override
   void initState() {
     super.initState();
+    _nameController = TextEditingController();
+    _emailController = TextEditingController();
+    _phoneController = TextEditingController();
+    _idCardFrontController = TextEditingController();
+    _idCardBackController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _nameController?.dispose();
+    _emailController?.dispose();
+    _phoneController?.dispose();
+    _idCardFrontController?.dispose();
+    _idCardBackController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -152,38 +191,36 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                   _buildProfileInformationField(
                     context,
                     "lbl_name2".tr,
-                    null, // Provide controller if necessary
+                    _nameController,
                     "Enter Name",
                   ),
                   SizedBox(height: 19.v),
                   _buildProfileInformationField(
                     context,
                     "lbl_email2".tr,
-                    null, // Provide controller if necessary
+                    _emailController,
                     "Enter Email",
                   ),
                   SizedBox(height: 19.v),
                   _buildProfileInformationField(
                     context,
                     "lbl_phone2".tr,
-                    null, // Provide controller if necessary
+                    _phoneController,
                     "Enter Phone",
                   ),
                   SizedBox(height: 19.v),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        // Add your widgets here
-                        UploadPicWidget(
-                          text: "lbl_id_card_front".tr,
-                        ),
-                        UploadPicWidget(
-                          text: "lbl_id_card_back".tr,
-                        )
-                      ],
-                    ),
+                  _buildProfileInformationField(
+                    context,
+                    "lbl_id_card_front".tr,
+                    _idCardFrontController,
+                    "Enter ID Card Front",
+                  ),
+                  SizedBox(height: 19.v),
+                  _buildProfileInformationField(
+                    context,
+                    "lbl_id_card_back".tr,
+                    _idCardBackController,
+                    "Enter ID Card Back",
                   ),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
@@ -194,6 +231,9 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
+                    onPressed: () {
+                      _submit();
+                    },
                   ),
                   SizedBox(height: 28.v),
                 ],
@@ -205,14 +245,37 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
       ),
     );
   }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      // If the form is valid, create a SellerProfile object
+      // and pass it to the next screen
+      SellerProfile profile = SellerProfile(
+        name: _nameController!.text,
+        email: _emailController!.text,
+        phone: _phoneController!.text,
+        idCardFront: _idCardFrontController!.text,
+        idCardBack: _idCardBackController!.text,
+      );
+
+      // Navigate to the next screen passing the profile information
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SellerAdressMobScreen(sellerProfile: profile,),
+        ),
+      );
+    }
+  }
 }
 
 class UploadPicWidget extends StatelessWidget {
-  String text;
-  UploadPicWidget({
+  final String text;
+
+  const UploadPicWidget({
+    Key? key,
     required this.text,
-    super.key,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

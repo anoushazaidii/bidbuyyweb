@@ -1,5 +1,7 @@
+import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/core/utils/validation_functions.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:bidbuyweb/widgets/CustomPinCodeTextField.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
@@ -21,7 +23,10 @@ class SellerOtpMobScreen extends StatefulWidget {
 
 class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _otpController = TextEditingController();
+  final FirebaseAuthService _authService = FirebaseAuthService();
+  String verificationId = "";
   @override
   void initState() {
     super.initState();
@@ -138,6 +143,21 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
                   ),
                   SizedBox(height: 15.v),
                   _buildEmailField(context),
+                  SizedBox(height: 16.v),
+                  CustomElevatedButton(
+                    height: 20.v,
+                    text: "Send Otp".tr,
+                    margin: EdgeInsets.only(right: 9.h),
+                    buttonStyle: CustomButtonStyles.none,
+                    decoration: CustomButtonStyles
+                        .gradientOnPrimaryContainerToPrimaryTL17Decoration,
+                    buttonTextStyle: theme.textTheme.labelMedium!,
+                    onPressed: () async {
+                      String phoneNumber = _phoneNumberController
+                          .text; // Extract phone number from TextEditingController
+                      await sendOTP(phoneNumber);
+                    },
+                  ),
                   SizedBox(height: 8.v),
                   _buildOTPField(context),
                   SizedBox(height: 5.v),
@@ -160,6 +180,10 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
+                    onPressed: () async {
+                      String otpNumber = _otpController.text;
+                      await verifyOTP(verificationId, otpNumber);
+                    },
                   ),
                   // SizedBox(height: 20.v),
                   // Subscribe_Widget(),
@@ -202,8 +226,8 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
           Padding(
             padding: EdgeInsets.only(left: 1.h),
             child: CustomTextFormField(
-                // controller: emailController,
-                ),
+              controller: _phoneNumberController,
+            ),
           ),
         ],
       ),
@@ -230,13 +254,36 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
               padding: EdgeInsets.only(right: 124.h),
               child: CustomPinCodeTextField(
                 context: context,
-                // controller: otpController,
+                controller: _otpController,
                 onChanged: (value) {
-                  // otpController?.text = value;
+                  _otpController.text = value;
                 },
               )),
         ],
       ),
     );
+  }
+
+  Future<void> sendOTP(String phoneNumber) async {
+    try {
+      await FirebaseAuthService().sendOTP(phoneNumber, (String id) {
+        setState(() {
+          verificationId = id;
+        });
+      });
+    } catch (e) {
+      print("Error sending OTP: $e");
+      // Handle the error (show error message, etc.)
+    }
+  }
+
+  Future<void> verifyOTP(String verificationId, String smsCode) async {
+    try {
+      await FirebaseAuthService().verifyOTP(verificationId, smsCode, context);
+   
+      } catch (e) {
+      print("Error verifying OTP: $e");
+      // Handle the error (show error message, etc.)
+    }
   }
 }

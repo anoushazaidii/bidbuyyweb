@@ -1,4 +1,5 @@
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/domain/models/product_model.dart';
 import 'package:bidbuyweb/widgets/app_bar/appBar_widget.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
@@ -7,7 +8,8 @@ import 'package:bidbuyweb/widgets/subscribe_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProductMobScreen extends StatefulWidget {
-  const ProductMobScreen({Key? key})
+  final ProductModel product;
+  const ProductMobScreen({Key? key, required this.product})
       : super(
           key: key,
         );
@@ -48,6 +50,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                             padding: EdgeInsets.only(bottom: 1.v),
                             child: Text(
                               "lbl_auction".tr,
+                          // widget.product.
                               style: CustomTextStyles.bodyMediumBlack900_1,
                             ),
                           ),
@@ -67,7 +70,8 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                               top: 1.v,
                             ),
                             child: Text(
-                              "lbl_category".tr,
+                              // "lbl_category".tr,
+                              widget.product.categoriesList.toString(),
                               style: CustomTextStyles.bodyMediumGray900,
                             ),
                           ),
@@ -87,7 +91,8 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                               top: 1.v,
                             ),
                             child: Text(
-                              "product name",
+                              // "product name",
+                              widget.product.productName.toString(),
                               style: CustomTextStyles.bodyMediumGray900,
                             ),
                           ),
@@ -97,7 +102,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                   ),
                   SizedBox(height: 20.v),
                   CustomImageView(
-                    imagePath: ImageConstant.imgImage8386x358,
+                    imagePath: widget.product.photosList![0],
                     height: 386.v,
                     width: 358.h,
                   ),
@@ -112,7 +117,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       child: Row(
                         children: [
                           CustomImageView(
-                            imagePath: ImageConstant.imgImage8386x358,
+                            imagePath: widget.product.photosList![1],
                             height: 54.v,
                             width: 69.h,
                           ),
@@ -127,6 +132,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       padding: EdgeInsets.only(left: 16.h),
                       child: Text(
                         "lbl_xyz_instrument".tr,
+                        // widget.product
                         style:
                             CustomTextStyles.headlineSmallInterBlack900SemiBold,
                       ),
@@ -138,7 +144,8 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 16.h),
                       child: Text(
-                        "msg_time_left_4d_20h2".tr,
+                        // "msg_time_left_4d_20h2".tr,
+                       widget.product.endingTime.toString(),
                         style: CustomTextStyles.bodyLargePrimary,
                       ),
                     ),
@@ -152,7 +159,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "lbl_rs_192_00".tr,
+                           widget.product.initialPrice??"",
                             style: CustomTextStyles.headlineSmallInterBlack900,
                           ),
                           Padding(
@@ -162,7 +169,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                               bottom: 5.v,
                             ),
                             child: Text(
-                              "lbl_3_bids2".tr,
+                            widget.product.biddingList!.length.toString(),
                               style:
                                   CustomTextStyles.bodyMediumPoppinsBlack900_1,
                             ),
@@ -179,7 +186,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       right: 24.h,
                     ),
                     child: Text(
-                      "msg_playstation_5_controller".tr,
+                      widget.product.description??"",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style:
@@ -414,7 +421,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
             width: 307.h,
             margin: EdgeInsets.only(left: 3.h),
             child: Text(
-              "msg_lorem_ipsum_dolor".tr,
+             widget.product.description??"",
               maxLines: 9,
               overflow: TextOverflow.ellipsis,
               style: CustomTextStyles.bodyMediumInterBlack900.copyWith(

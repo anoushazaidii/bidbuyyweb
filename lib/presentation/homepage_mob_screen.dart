@@ -1,7 +1,10 @@
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/presentation/fav_item_screen.dart';
+import 'package:bidbuyweb/theme/provider/fav_providor.dart';
 import 'package:bidbuyweb/widgets/app_bar/appbar_title_image.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_outlined_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/fortytwo_item_widget.dart';
 import '../widgets/productcard_item_widget.dart';
 import '../domain/models/fortytwo_item_model.dart';
@@ -79,25 +82,75 @@ Future<void> _fetchProducts() async {
   }
 
 
-
   PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-      leadingWidth: 40.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgFrame,
-        margin: EdgeInsets.only(left: 16.h, top: 7.v, bottom: 2.v),
+  return CustomAppBar(
+    leadingWidth: 40.h,
+    leading: AppbarLeadingImage(
+      imagePath: ImageConstant.imgFrame,
+      margin: EdgeInsets.only(left: 16.h, top: 7.v, bottom: 2.v),
+    ),
+    title: AppbarTitleImage(
+      imagePath: ImageConstant.imgText,
+      margin: EdgeInsets.only(left: 16.h),
+    ),
+    actions: [
+      // Favorite Icon with Functionality
+    GestureDetector(
+  onTap: () {
+    final favoriteProvider = Provider.of<FavoriteProvider>(context, listen: false);
+    final String itemId = products[0].id??""; // Replace with the actual product ID or identifier
+
+    // Toggle favorite status
+    if (favoriteProvider.isFavorite(itemId)) {
+      favoriteProvider.removeFavorite(itemId);
+    } else {
+      favoriteProvider.addFavorite(itemId);
+    }
+ Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => FavoriteItemsScreen()),
+    );// Adjust route as needed
+  },
+  child: AppbarTrailingImage(
+    imagePath: ImageConstant.imgFrameBlack900,
+    margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 2.h),
+  ),
+),
+
+      // Logout/Login Icon with Functionality
+      GestureDetector(
+        onTap: () async {
+          bool isLoggedIn = await checkUserLoggedIn(); // Replace with actual check
+          if (isLoggedIn) {
+            await performLogout(); // Replace with actual logout function
+          } else {
+            Navigator.pushNamed(context, '/signupScreen'); // Adjust route as needed
+          }
+        },
+        child: AppbarTrailingImage(
+          imagePath: ImageConstant.imgFrame24x24,
+          margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 18.h),
+        ),
       ),
-      title: AppbarTitleImage(
-        imagePath: ImageConstant.imgText,
-        margin: EdgeInsets.only(left: 16.h),
-      ),
-      actions: [
-        AppbarTrailingImage(imagePath: ImageConstant.imgFrameBlack900, margin: EdgeInsets.only(left: 16.h, top: 7.v, right: 2.h)),
-        AppbarTrailingImage(imagePath: ImageConstant.imgFrameBlack900, margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 2.h)),
-        AppbarTrailingImage(imagePath: ImageConstant.imgFrame24x24, margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 18.h)),
-      ],
-    );
-  }
+    ],
+  );
+}
+
+// Helper functions for login/logout
+Future<bool> checkUserLoggedIn() async {
+  // Use FirebaseAuth to get the current user
+  User? user = FirebaseAuth.instance.currentUser;
+  
+  // If the user is not null, they are logged in
+  return user != null;
+}
+
+
+Future<void> performLogout() async {
+  // Implement your logout functionality here
+FirebaseAuth.instance.signOut() ;
+}
+
 
   Widget offerMsg(BuildContext context) {
     return Container(

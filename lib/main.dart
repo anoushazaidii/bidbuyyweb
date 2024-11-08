@@ -18,6 +18,7 @@ import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dar
 import 'package:bidbuyweb/firebase_options.dart';
 import 'package:bidbuyweb/presentation/signup_mob_one_screen.dart';
 import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
+import 'package:bidbuyweb/theme/provider/fav_providor.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -58,6 +59,8 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => SellerAccountMobProvider()),
             ChangeNotifierProvider(create: (_) => AddProductDeliveryMobProvider()),
             ChangeNotifierProvider(create: (_) => SellerProductDescriptionMobProvider()),
+            ChangeNotifierProvider(create: (_) => FavoriteProvider ()),
+            
           ],
           child: MaterialApp(
             theme: theme,
@@ -76,8 +79,8 @@ class MyApp extends StatelessWidget {
                 '',
               ),
             ],
-            // home:SignupMobileScreen (),
-            home: SellerOtpMobScreen ()
+            home:SignupMobileScreen (),
+            // home: UserOrSellerScreen ()
           ),
         );; 
       },

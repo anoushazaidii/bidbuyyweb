@@ -33,7 +33,7 @@ class DeliveryItemWidget extends StatelessWidget {
                 4.h,
               ),
               border: Border.all(
-                color: appTheme.blueGray100,
+                color: appTheme.blueA400,
                 width: 2.h,
                 strokeAlign: strokeAlignCenter,
               ),

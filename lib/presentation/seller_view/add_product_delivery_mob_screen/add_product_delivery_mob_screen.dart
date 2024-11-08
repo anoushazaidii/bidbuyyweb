@@ -1,4 +1,8 @@
+import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/domain/models/product_model.dart';
+import 'package:bidbuyweb/presentation/seller_account_mob_screen/seller_account_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
 
@@ -10,7 +14,9 @@ import 'package:flutter/material.dart';
 import 'provider/add_product_delivery_mob_provider.dart';
 
 class AddProductDeliveryMobScreen extends StatefulWidget {
-  const AddProductDeliveryMobScreen({Key? key})
+  final CombinedProductModel combinedProductModel;
+  
+  const AddProductDeliveryMobScreen({Key? key, required this.combinedProductModel, })
       : super(
           key: key,
         );
@@ -18,10 +24,10 @@ class AddProductDeliveryMobScreen extends StatefulWidget {
   @override
   AddProductDeliveryMobScreenState createState() =>
       AddProductDeliveryMobScreenState();
-  static Widget builder(BuildContext context) {
+  static Widget builder(BuildContext context, CombinedProductModel combinedProductModel) {
     return ChangeNotifierProvider(
       create: (context) => AddProductDeliveryMobProvider(),
-      child: const AddProductDeliveryMobScreen(),
+      child: AddProductDeliveryMobScreen(combinedProductModel: combinedProductModel,),
     );
   }
 }
@@ -29,6 +35,7 @@ class AddProductDeliveryMobScreen extends StatefulWidget {
 class AddProductDeliveryMobScreenState
     extends State<AddProductDeliveryMobScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseAuthService authService = FirebaseAuthService();
 
   @override
   void initState() {
@@ -282,47 +289,97 @@ class AddProductDeliveryMobScreenState
       ),
     );
   }
-  /// Section Widget
-  /// Section Widget
-  Widget _buildTextField(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 4.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "lbl_shipping_time".tr,
-            style: CustomTextStyles.titleMediumMulishGray90001_1,
-          ),
-          SizedBox(height: 4.v),
-          Selector<AddProductDeliveryMobProvider, TextEditingController?>(
-            selector: (
-              context,
-              provider,
-            ) =>
-                provider.timeController,
-            builder: (context, timeController, child) {
-              return CustomTextFormField(
-                controller: timeController,
-                hintText: "lbl_specify_a_date".tr,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 16.h,
-                  vertical: 14.v,
-                ),
-                borderDecoration: TextFormFieldStyleHelper.fillGrayTL8,
-                filled: true,
-                fillColor: appTheme.gray900,
-              );
-            },
-          ),
-        ],
-      ),
-    );
+  Future<void> _selectDate(
+  BuildContext context,
+  TextEditingController controller,
+) async {
+  DateTime? picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2000),
+    lastDate: DateTime(2100),
+  );
+  
+  if (picked != null) {
+    // Format the selected date to a readable format, e.g., 'MM/dd/yyyy'
+    controller.text = "${picked.month}/${picked.day}/${picked.year}";
   }
+}
 
   /// Section Widget
-  Widget _buildTimeColumn(BuildContext context) {
+  Widget _buildTextField(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(left: 4.h),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "lbl_shipping_starting_time".tr,
+          style: CustomTextStyles.titleMediumMulishGray90001_1,
+        ),
+        SizedBox(height: 4.v),
+        // Field for Starting Time
+        Selector<AddProductDeliveryMobProvider, TextEditingController?>(
+          selector: (context, provider) => provider.startingTimeController,
+          builder: (context, startingTimeController, child) {
+            return GestureDetector(
+              onTap: () => _selectDate(context, startingTimeController!),
+              child: AbsorbPointer(
+                child: CustomTextFormField(
+                  controller: startingTimeController,
+                  hintText: "lbl_specify_starting_date".tr,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.h,
+                    vertical: 14.v,
+                  ),
+                  borderDecoration: TextFormFieldStyleHelper.fillGrayTL8,
+                  filled: true,
+                  fillColor: appTheme.gray900,
+                ),
+              ),
+            );
+          },
+        ),
+        SizedBox(height: 10.v), // Add some spacing between fields
+
+        Text(
+          "lbl_shipping_ending_time".tr,
+          style: CustomTextStyles.titleMediumMulishGray90001_1,
+        ),
+        SizedBox(height: 4.v),
+        // Field for Ending Time
+        Selector<AddProductDeliveryMobProvider, TextEditingController?>(
+          selector: (context, provider) => provider.endingTimeController,
+          builder: (context, endingTimeController, child) {
+            return GestureDetector(
+              onTap: () => _selectDate(context, endingTimeController!),
+              child: AbsorbPointer(
+                child: CustomTextFormField(
+                  controller: endingTimeController,
+                  hintText: "lbl_specify_ending_date".tr,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 16.h,
+                    vertical: 14.v,
+                  ),
+                  borderDecoration: TextFormFieldStyleHelper.fillGrayTL8,
+                  filled: true,
+                  fillColor: appTheme.gray900,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+  );
+}
+
+
+  /// Section Widget
+  Widget   _buildTimeColumn(BuildContext context) {
+    
     return Container(
+      
       padding: EdgeInsets.symmetric(
         horizontal: 26.h,
         vertical: 34.v,
@@ -378,6 +435,31 @@ class AddProductDeliveryMobScreenState
           _buildTextField(context),
           SizedBox(height: 35.v),
           CustomElevatedButton(
+            
+            onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    final provider = Provider.of<AddProductDeliveryMobProvider>(context, listen: false);
+
+                  // Perform the action only if the form is valid
+                  ProductModel productModel = ProductModel(
+                   sellerId: widget.combinedProductModel.product.sellerUid,
+                   productId:generateRandomUID(),
+                   productName: widget.combinedProductModel.product.name,
+                   description: widget.combinedProductModel.product.description,
+                   length: 0,
+                   initialPrice: widget.combinedProductModel.product.initial_price,
+                   biddingList: [],
+                   photosList: widget.combinedProductModel.imageUrls,
+              // Assign starting and ending times
+                    startingTime: provider.startingTimeController.text,
+                    endingTime: provider.endingTimeController.text,
+
+
+                  );
+
+                  authService.saveProductDataToFirestore(productModel, context);
+                }
+            },
             height: 52.v,
             width: 186.h,
             text: "lbl_next".tr,

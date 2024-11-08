@@ -30,6 +30,9 @@ class SellerAdressMobScreen extends StatefulWidget {
 class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TextEditingController _addressController;
+String? _selectedCountry;
+  String? _selectedState;
+  String? _selectedArea;
 
   @override
   void initState() {
@@ -193,7 +196,7 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>( // Country Dropdown
             selector: (
               context,
               provider,
@@ -212,13 +215,23 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                 hintText: "lbl_pakistan".tr,
                 items: sellerAdressMobModelObj?.dropdownItemList ?? [],
                 onChanged: (value) {
+                  setState(() {
+                    _selectedCountry = value.title; 
+                    print(_selectedCountry);// Update selected country
+                  });
                   context.read<SellerAdressMobProvider>().onSelected(value);
+                },
+                validator: (value) {
+                  if (value == null || value.title.isEmpty) {
+                    return 'Please select a country.';
+                  }
+                  return null;
                 },
               );
             },
           ),
           SizedBox(height: 16.v),
-          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>( // State Dropdown
             selector: (
               context,
               provider,
@@ -237,13 +250,24 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                 hintText: "lbl_select_state".tr,
                 items: sellerAdressMobModelObj?.dropdownItemList1 ?? [],
                 onChanged: (value) {
+                  setState(() {
+                    _selectedState = value.title; // Update selected state
+                                        print(_selectedState);// Update selected country
+
+                  });
                   context.read<SellerAdressMobProvider>().onSelected1(value);
+                },
+                validator: (value) {
+                  if (value == null || value.title.isEmpty) {
+                    return 'Please select a state.';
+                  }
+                  return null;
                 },
               );
             },
           ),
           SizedBox(height: 16.v),
-          Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+          Selector<SellerAdressMobProvider, SellerAdressMobModel?>( // Area Dropdown
             selector: (
               context,
               provider,
@@ -262,7 +286,18 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
                 hintText: "lbl_select_area".tr,
                 items: sellerAdressMobModelObj?.dropdownItemList2 ?? [],
                 onChanged: (value) {
+                  setState(() {
+                    _selectedArea = value.title; // Update selected area
+                                        print(_selectedArea);// Update selected country
+
+                  });
                   context.read<SellerAdressMobProvider>().onSelected2(value);
+                },
+                validator: (value) {
+                  if (value == null || value.title.isEmpty) {
+                    return 'Please select an area.';
+                  }
+                  return null;
                 },
               );
             },
@@ -271,15 +306,102 @@ class SellerAdressMobScreenState extends State<SellerAdressMobScreen> {
       ),
     );
   }
+  // Widget _buildDropDowns(BuildContext context) {
+  //   return Padding(
+  //     padding: EdgeInsets.only(
+  //       left: 5.h,
+  //       right: 6.h,
+  //     ),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+  //           selector: (
+  //             context,
+  //             provider,
+  //           ) =>
+  //               provider.sellerAdressMobModelObj,
+  //           builder: (context, sellerAdressMobModelObj, child) {
+  //             return CustomDropDown(
+  //               icon: Container(
+  //                 margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+  //                 child: CustomImageView(
+  //                   imagePath: ImageConstant.imgArrowdown,
+  //                   height: 24.adaptSize,
+  //                   width: 24.adaptSize,
+  //                 ),
+  //               ),
+  //               hintText: "lbl_pakistan".tr,
+  //               items: sellerAdressMobModelObj?.dropdownItemList ?? [],
+  //               onChanged: (value) {
+  //                 context.read<SellerAdressMobProvider>().onSelected(value);
+  //               },
+  //             );
+  //           },
+  //         ),
+  //         SizedBox(height: 16.v),
+  //         Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+  //           selector: (
+  //             context,
+  //             provider,
+  //           ) =>
+  //               provider.sellerAdressMobModelObj,
+  //           builder: (context, sellerAdressMobModelObj, child) {
+  //             return CustomDropDown(
+  //               icon: Container(
+  //                 margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+  //                 child: CustomImageView(
+  //                   imagePath: ImageConstant.imgArrowdown,
+  //                   height: 24.adaptSize,
+  //                   width: 24.adaptSize,
+  //                 ),
+  //               ),
+  //               hintText: "lbl_select_state".tr,
+  //               items: sellerAdressMobModelObj?.dropdownItemList1 ?? [],
+  //               onChanged: (value) {
+  //                 context.read<SellerAdressMobProvider>().onSelected1(value);
+  //               },
+  //             );
+  //           },
+  //         ),
+  //         SizedBox(height: 16.v),
+  //         Selector<SellerAdressMobProvider, SellerAdressMobModel?>(
+  //           selector: (
+  //             context,
+  //             provider,
+  //           ) =>
+  //               provider.sellerAdressMobModelObj,
+  //           builder: (context, sellerAdressMobModelObj, child) {
+  //             return CustomDropDown(
+  //               icon: Container(
+  //                 margin: EdgeInsets.fromLTRB(30.h, 13.v, 11.h, 13.v),
+  //                 child: CustomImageView(
+  //                   imagePath: ImageConstant.imgArrowdown,
+  //                   height: 24.adaptSize,
+  //                   width: 24.adaptSize,
+  //                 ),
+  //               ),
+  //               hintText: "lbl_select_area".tr,
+  //               items: sellerAdressMobModelObj?.dropdownItemList2 ?? [],
+  //               onChanged: (value) {
+  //                 context.read<SellerAdressMobProvider>().onSelected2(value);
+  //               },
+  //             );
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
       // Combine data from the previous screen and this screen
       final combinedModel = CombinedModel(
         sellerProfile: widget.sellerProfile,
-        country: 'Pakistan', // Example: Replace with selected country
-        state: 'Punjab', // Example: Replace with selected state
-        area: 'Lahore', // Example: Replace with selected area
+  country: _selectedCountry!,
+            state: _selectedState!,
+            area: _selectedArea!,
         fullAddress: _addressController.text,
       );
 

@@ -1,17 +1,23 @@
+import 'package:bidbuyweb/presentation/homepage_mob_one_screen.dart';
+import 'package:bidbuyweb/presentation/homepage_mob_screen.dart';
+import 'package:bidbuyweb/presentation/layout_type/home_page.dart';
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/provider/seller_account_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_account_mob_screen/seller_account_mob_screen.dart';
 import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/provider/seller_product_description_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/seller_product_description_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/add_product_delivery_mob_screen/provider/add_product_delivery_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_add_product.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/provider/seller_adress_mob_provider.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/seller_adress_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_signup.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_verify_screen.dart';
 
 import 'package:bidbuyweb/presentation/seller_view/seller_otp_screen.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:bidbuyweb/firebase_options.dart';
 import 'package:bidbuyweb/presentation/signup_mob_one_screen.dart';
+import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
@@ -50,7 +56,7 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ThemeProvider()),
             ChangeNotifierProvider(create: (_) => SellerAdressMobProvider()),
             ChangeNotifierProvider(create: (_) => SellerAccountMobProvider()),
-            
+            ChangeNotifierProvider(create: (_) => AddProductDeliveryMobProvider()),
             ChangeNotifierProvider(create: (_) => SellerProductDescriptionMobProvider()),
           ],
           child: MaterialApp(
@@ -70,10 +76,10 @@ class MyApp extends StatelessWidget {
                 '',
               ),
             ],
-            home: const AddProductPhotosMobScreen(),
-
+            // home:SignupMobileScreen (),
+            home: SellerOtpMobScreen ()
           ),
-        );
+        );; 
       },
     );
   }

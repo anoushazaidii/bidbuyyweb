@@ -1,9 +1,13 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/core/utils/validation_functions.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_adress_mob_screen/seller_adress_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 // Model to store seller profile information
 class SellerProfile {
@@ -39,17 +43,21 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
   TextEditingController? _nameController;
   TextEditingController? _emailController;
   TextEditingController? _phoneController;
-  TextEditingController? _idCardFrontController;
-  TextEditingController? _idCardBackController;
+  // TextEditingController? _idCardFrontController;
+  // TextEditingController? _idCardBackController;
+Uint8List? _idCardFrontImage;
+Uint8List? _idCardBackImage;
 
+  final ImagePicker _picker = ImagePicker();
+  
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
-    _idCardFrontController = TextEditingController();
-    _idCardBackController = TextEditingController();
+    // _idCardFrontController = TextEditingController();
+    // _idCardBackController = TextEditingController();
   }
 
   @override
@@ -57,10 +65,46 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
     _nameController?.dispose();
     _emailController?.dispose();
     _phoneController?.dispose();
-    _idCardFrontController?.dispose();
-    _idCardBackController?.dispose();
+    // _idCardFrontController?.dispose();
+    // _idCardBackController?.dispose();
     super.dispose();
   }
+Future<void> _pickImage(bool isFront) async {
+  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  if (pickedFile != null) {
+    final Uint8List fileBytes = await pickedFile.readAsBytes();  // Convert to Uint8List
+    setState(() {
+      if (isFront) {
+        _idCardFrontImage = fileBytes;
+      } else {
+        _idCardBackImage = fileBytes;
+      }
+    });
+  }
+}
+
+
+Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
+  try {
+     // Check if the image is too large
+  if (imageData.lengthInBytes > 5 * 1024 * 1024) {
+    print("Image size exceeds the maximum allowed limit of 5 MB.");
+    return null;
+  }
+
+    final ref = FirebaseStorage.instance.ref().child('id_cards/$imageName');
+    final uploadTask = ref.putData(imageData); // Uploading image as bytes (Uint8List)
+
+    final snapshot = await uploadTask.whenComplete(() => null);
+    final downloadUrl = await snapshot.ref.getDownloadURL(); // Get download URL
+
+    return downloadUrl;  // Return the URL of the uploaded image
+  } catch (e) {
+    print("Error uploading image: $e");
+    return null;
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +140,7 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
   }
 
   Widget _buildProfileInformationField(
+    
     BuildContext context,
     String label,
     TextEditingController? controller,
@@ -193,6 +238,7 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                     "lbl_name2".tr,
                     _nameController,
                     "Enter Name",
+                  
                   ),
                   SizedBox(height: 19.v),
                   _buildProfileInformationField(
@@ -209,19 +255,21 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                     "Enter Phone",
                   ),
                   SizedBox(height: 19.v),
-                  _buildProfileInformationField(
-                    context,
-                    "lbl_id_card_front".tr,
-                    _idCardFrontController,
-                    "Enter ID Card Front",
-                  ),
-                  SizedBox(height: 19.v),
-                  _buildProfileInformationField(
-                    context,
-                    "lbl_id_card_back".tr,
-                    _idCardBackController,
-                    "Enter ID Card Back",
-                  ),
+                  // _buildProfileInformationField(
+                  //   context,
+                  //   "lbl_id_card_front".tr,
+                  //   _idCardFrontController,
+                  //   "Enter ID Card Front",
+                  // ),
+                  // SizedBox(height: 19.v),
+                  // _buildProfileInformationField(
+                  //   context,
+                  //   "lbl_id_card_back".tr,
+                  //   _idCardBackController,
+                  //   "Enter ID Card Back",
+                  // ),
+                _buildImageUploadSection("Upload ID Card Front", true),
+                _buildImageUploadSection("Upload ID Card Back", false),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                     height: 35.v,
@@ -231,9 +279,14 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
-                    onPressed: () {
-                      _submit();
-                    },
+                     onPressed: () async {
+                    // Validate inputs before submitting
+                    if (_validateInputs()) {
+                      print("Submitting");
+                      await _submit();
+                      print("Submitted");
+                    }
+                  },
                   ),
                   SizedBox(height: 28.v),
                 ],
@@ -245,71 +298,103 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
       ),
     );
   }
+  
+// Validation functions
+bool _validateInputs() {
+  final name = _nameController?.text;
+  final email = _emailController!.text;
+  final phone = _phoneController!.text;
 
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      // If the form is valid, create a SellerProfile object
-      // and pass it to the next screen
+  // Validate Name
+  if (name!.isEmpty) {
+    _showError("Name cannot be empty");
+    return false;
+  }
+
+  // Validate Email using isValidEmail function
+  if (!isValidEmail(email, isRequired: true)) {
+    _showError("Please enter a valid email");
+    return false;
+  }
+
+  // Validate Phone using isNumeric function
+  if (!isNumeric(phone, isRequired: true)) {
+    _showError("Please enter a valid phone number");
+    return false;
+  }
+
+  return true;
+}
+void _showError(String message) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(message)),
+  );
+}
+Future<void> _submit() async {
+  if (_formKey.currentState!.validate()) {
+    String? frontImageUrl;
+    String? backImageUrl;
+
+    // Check if images are picked and upload them
+    if (_idCardFrontImage != null) {
+      frontImageUrl = await _uploadImage(_idCardFrontImage!, 'id_card_front_${_nameController!.text}');
+    }
+
+    if (_idCardBackImage != null) {
+      backImageUrl = await _uploadImage(_idCardBackImage!, 'id_card_back_${_nameController!.text}');
+    }
+
+    // After uploading both images, check if they are uploaded successfully
+    if (frontImageUrl != null && backImageUrl != null) {
+      // Create a seller profile with the image URLs
       SellerProfile profile = SellerProfile(
         name: _nameController!.text,
         email: _emailController!.text,
         phone: _phoneController!.text,
-        idCardFront: _idCardFrontController!.text,
-        idCardBack: _idCardBackController!.text,
+        idCardFront: frontImageUrl,
+        idCardBack: backImageUrl,
       );
 
-      // Navigate to the next screen passing the profile information
+      // Navigate to the next screen with the seller profile
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => SellerAdressMobScreen(sellerProfile: profile,),
+          builder: (context) => SellerAdressMobScreen(sellerProfile: profile),
         ),
       );
+    } else {
+      print("Error: Image upload failed.");
     }
   }
 }
 
-class UploadPicWidget extends StatelessWidget {
-  final String text;
 
-  const UploadPicWidget({
-    Key? key,
-    required this.text,
-  }) : super(key: key);
+Widget _buildImageUploadSection(String label, bool isFront) {
+  Uint8List? image = isFront ? _idCardFrontImage : _idCardBackImage;
 
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Padding(
-        padding: EdgeInsets.only(right: 12.h),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Opacity(
-              opacity: 0.4,
-              child: Text(
-                text,
-                style: CustomTextStyles.bodyLargePoppinsGray90001,
-              ),
-            ),
-            SizedBox(height: 1.v),
-            Container(
-              height: 40.v,
-              width: 150.h,
-              padding: EdgeInsets.symmetric(vertical: 7.v),
-              decoration: AppDecoration.outlineGray.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder4,
-              ),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgMaterialSymbolsUploadSharp,
-                height: 24.adaptSize,
-                width: 24.adaptSize,
-                alignment: Alignment.center,
-              ),
-            ),
-          ],
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: CustomTextStyles.bodyMediumGray90001),
+      SizedBox(height: 8.v),
+      GestureDetector(
+        onTap: () => _pickImage(isFront),
+        child: Container(
+          height: 150.v,
+          width: 150.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: image != null
+              ? Image.memory(image)
+              : Icon(Icons.upload, size: 50),
+          ),
         ),
       ),
-    );
-  }
+    ],
+  );
+}
+
 }

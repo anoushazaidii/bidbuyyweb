@@ -1,5 +1,8 @@
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/models/productcard1_item_model.dart';
+import 'package:bidbuyweb/presentation/category_mob_screen.dart';
+import 'package:bidbuyweb/presentation/homepage_mob_screen.dart';
+import 'package:bidbuyweb/presentation/product_mob_screen.dart';
 import 'package:bidbuyweb/widgets/app_bar/appBar_widget.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_outlined_button.dart';
@@ -49,6 +52,13 @@ class HomepageMobOneScreenState extends State<HomepageMobOneScreen> {
                 _buildProductCard(context),
                 SizedBox(height: 19.v),
                 CustomOutlinedButton(
+                  onPressed: (){
+                      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => CategoryMobScreen() ),
+    );
+                    
+                  },
                   width: 141.h,
                   text: "lbl_view_all".tr,
                   buttonStyle: CustomButtonStyles.none,

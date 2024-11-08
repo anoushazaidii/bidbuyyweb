@@ -1,6 +1,7 @@
 import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/facebookauth/facebook_auth_helper.dart';
+import 'package:bidbuyweb/presentation/homepage_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_checkbox_button.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
@@ -236,6 +237,10 @@ void _signIn() async {
     if (user != null) {
  ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("successfuly logged in")));
+          Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomepageMobScreen() ),
+    );
     } else {
    ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("invalid")));

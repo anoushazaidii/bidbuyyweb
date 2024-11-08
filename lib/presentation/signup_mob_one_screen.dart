@@ -1,6 +1,7 @@
 import 'package:bidbuyweb/backend/user_auth/firebase_auth_servies.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/facebookauth/facebook_auth_helper.dart';
+import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
 
 import 'package:bidbuyweb/widgets/custom_checkbox_button.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
@@ -249,10 +250,15 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
 
     if (user != null) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("User created")));
+          .showSnackBar(const SnackBar(content: Text("User created")));
+             Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignupMobScreen() ),
+    );
+
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Can not create user")));
+          .showSnackBar(const SnackBar(content: Text("Can not create user")));
     }
   }
 }

@@ -6,10 +6,12 @@ class ProductModel {
   double? length;
   double? width;
   double? height;
-  double? initialPrice;
+  String? initialPrice;
   List<dynamic>? biddingList;
   List<dynamic>? categoriesList;
   List<dynamic>? photosList;
+  String? startingTime;
+  String? endingTime;
 
   ProductModel({
     this.sellerId,
@@ -23,6 +25,8 @@ class ProductModel {
     this.biddingList,
     this.categoriesList,
     this.photosList,
+    this.endingTime,
+    this.startingTime
   });
 
   Map<String, dynamic> toMap(ProductModel product) {
@@ -38,6 +42,8 @@ class ProductModel {
     data['biddingList'] = product.biddingList;
     data['categoriesList'] = product.categoriesList;
     data['photosList'] = product.photosList;
+    data['startingTime'] = product.startingTime;
+    data['endingTime'] = product.endingTime;
 
     return data;
   }
@@ -54,5 +60,7 @@ class ProductModel {
     biddingList = List<dynamic>.from(mapData['biddingList'] ?? []);
     categoriesList = List<dynamic>.from(mapData['categoriesList'] ?? []);
     photosList = List<dynamic>.from(mapData['photosList'] ?? []);
+    startingTime = mapData['startingTime'];
+    endingTime = mapData['endingTime'];
   }
 }

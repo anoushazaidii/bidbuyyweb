@@ -1,4 +1,5 @@
 // ignore_for_file: must_be_immutable
+import 'dart:ui' as ui;
 
 import 'dart:io';
 
@@ -149,7 +150,7 @@ extension ImageTypeExtension on String {
   ImageType get imageType {
     if (this.startsWith('http') || this.startsWith('https')) {
       return ImageType.network;
-    } else if (this.endsWith('.svg')) {
+    } else if (this.endsWith('.svg')) { 
       return ImageType.svg;
     } else if (this.startsWith('file://')) {
       return ImageType.file;

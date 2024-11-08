@@ -1,5 +1,10 @@
 import 'dart:js';
+import 'package:bidbuyweb/domain/models/product_model.dart';
 import 'package:bidbuyweb/domain/models/seller_model.dart';
+import 'package:bidbuyweb/presentation/homepage_mob_one_screen.dart';
+import 'package:bidbuyweb/presentation/homepage_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/seller_product_description_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/seller_add_product.dart';
 import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,15 +12,60 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-
-
 class FirebaseAuthService {
 
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  static final CollectionReference _sellerCollection = firestore.collection('donars');
-  
+  static final CollectionReference _sellerCollection = firestore.collection('sellers');
+  static final CollectionReference _userCollection = firestore.collection('users');
+  static final CollectionReference _productCollection = firestore.collection('product');
+
   static final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+ Future<void> sendOtp(String phoneNumber, Function(String) codeSent, Function(FirebaseAuthException) onError) async {
+    try {
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          // Auto-complete the OTP process (this might not always happen)
+          await _auth.signInWithCredential(credential);
+          print('OTP verified automatically');
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print("Verification failed: ${e.message}");
+          onError(e);
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          // Save the verificationId for later use when the user enters the OTP
+          codeSent(verificationId);
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          // Called when the timeout is reached without auto-verification
+          print("Code retrieval timeout");
+        },
+      );
+    } catch (e) {
+      print("Error during phone verification: $e");
+    }
+  }
+
+  // Function to verify the OTP entered by the user
+  Future<User?>  verifyOtp(String verificationId, String otp) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      print("OTP Verified successfully");
+      return userCredential.user;
+    } catch (e) {
+      print("Error verifying OTP: $e");
+      return null;
+    }
+  }
+
 
   Future<User?> signUpWithEmailAndPassword(String email, String password) async {
   print("here");
@@ -58,59 +108,31 @@ class FirebaseAuthService {
 
   }
 
-  Future<void> saveSellerDataToFirestore(SellerModel sellerModel) async {
+  Future<void> saveSellerDataToFirestore(SellerModel sellerModel, context) async {
+
     await _sellerCollection
         .doc(sellerModel.uid)
         .set(sellerModel.toMap(sellerModel));
-  }
- 
-    Future<void> sendOTP(String phoneNumber, Function(String) verificationIdCallback) async {
-    try {
-    print("SENDING OTP");
-      await _auth.verifyPhoneNumber(
-        phoneNumber: phoneNumber,
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await _auth.signInWithCredential(credential);
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          print("Verification Failed: ${e.message}");
-        },
-        codeSent: (String verificationId, int? resendToken) async {
-          print("Code Sent! Verification ID: $verificationId");
-          verificationIdCallback(verificationId);
-        },
-        codeAutoRetrievalTimeout: (String verificationId) {
-          print("Code Auto-Retrieval Timeout! Verification ID: $verificationId");
-        },
-        
-      );
-      print("verification code sended");
-    } catch (e) {
-      print("Error sending OTP: $e");
-    }
-  }
-
-
-  Future<void> verifyOTP(String verificationId, String smsCode, BuildContext context) async {
-    try {
-      print("OTP IS VERIFYING");
-      // Create a PhoneAuthCredential with the code
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verificationId,
-        smsCode: smsCode,
-      );
-      await _auth.signInWithCredential(credential);
 
       Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => SellerProfileMobScreen()),
-      );
-      // Sign in the user with the credential
-      print(credential);
-    } catch (e) {
-      print("Error verifying OTP: $e");
-    }
+      context,
+      MaterialPageRoute(builder: (context) => SellerAddProductMobScreen(sellerUid : sellerModel.uid)),
+    );
   }
+
+  Future<void> saveProductDataToFirestore(ProductModel productModel, context) async {
+
+    await _productCollection
+        .doc(productModel.productId)
+        .set(productModel.toMap(productModel));
+
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => HomepageMobScreen()),
+    );
+  }
+
+
 
  
   signInWitGoogle()async{
@@ -149,5 +171,6 @@ class FirebaseAuthService {
   }
 
 }
+
 
 

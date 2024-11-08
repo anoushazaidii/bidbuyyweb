@@ -2,13 +2,36 @@ import 'package:another_stepper/dto/stepper_data.dart';
 import 'package:another_stepper/widgets/another_stepper.dart';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/core/utils/validation_functions.dart';
+import 'package:bidbuyweb/presentation/category_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'provider/seller_product_description_mob_provider.dart';
 
+
+class Product {
+  final String name;
+  final String description;
+  final String no_of_units_available;
+  final String dimensions;
+  final String initial_price;
+  final String sellerUid;
+
+  Product({
+    required this.sellerUid,
+    required this.name,
+    required this.description,
+    required this.no_of_units_available,
+    required this.dimensions,
+    required this.initial_price,
+  });
+}
+
 class SellerProductDescriptionMobScreen extends StatefulWidget {
-  const SellerProductDescriptionMobScreen({Key? key})
+    final String? sellerUid;
+
+  const SellerProductDescriptionMobScreen({Key? key, required this.sellerUid})
       : super(
           key: key,
         );
@@ -16,10 +39,10 @@ class SellerProductDescriptionMobScreen extends StatefulWidget {
   @override
   SellerProductDescriptionMobScreenState createState() =>
       SellerProductDescriptionMobScreenState();
-  static Widget builder(BuildContext context) {
+  static Widget builder(BuildContext context,String sellerUid) {
     return ChangeNotifierProvider(
       create: (context) => SellerProductDescriptionMobProvider(),
-      child: const SellerProductDescriptionMobScreen(),
+      child:  SellerProductDescriptionMobScreen(sellerUid: sellerUid,),
     );
   }
 }
@@ -31,10 +54,13 @@ class SellerProductDescriptionMobScreenState
   @override
   void initState() {
     super.initState();
+      
   }
-
+  @override
+ 
   @override
   Widget build(BuildContext context) {
+
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -447,7 +473,27 @@ class SellerProductDescriptionMobScreenState
 
   /// Section Widget
   Widget _buildNext(BuildContext context) {
+      final provider = Provider.of<SellerProductDescriptionMobProvider>(context, listen: false);
+
+      Product newProduct = Product(
+   name:provider.nameController.text, 
+   description: provider.descriptionController.text, 
+   no_of_units_available: provider.availabilityvalueController.text,
+    dimensions: 
+    "", 
+    initial_price: provider.priceController.text,
+    sellerUid : widget.sellerUid!,
+  );
+    print("New Product Created: ${newProduct.name}, ${newProduct.description}");
+
     return CustomElevatedButton(
+      
+      onPressed: (){
+         Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => AddProductPhotosMobScreen(product: newProduct)),
+    );
+      },
       height: 52.v,
       width: 186.h,
       text: "lbl_next".tr,
@@ -487,6 +533,7 @@ class SellerProductDescriptionMobScreenState
           ),
           SizedBox(height: 10.v),
           _buildName(context),
+          
           SizedBox(height: 8.v),
           Text(
             "lbl_38_60".tr,

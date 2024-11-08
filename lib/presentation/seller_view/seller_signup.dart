@@ -150,6 +150,9 @@ class SellerSignUpState extends State<SellerSignUp> {
                       )),
                   SizedBox(height: 12.v),
                   CustomElevatedButton(
+                    onPressed: (){
+                      
+                    },
                       height: 35.v,
                       width: 320.v,
                       text: "lbl_register".tr,

@@ -6,6 +6,7 @@ import 'package:bidbuyweb/widgets/CustomPinCodeTextField.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SellerOtpMobScreen extends StatefulWidget {
@@ -26,8 +27,8 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
   final TextEditingController _phoneNumberController = TextEditingController();
   final TextEditingController _otpController = TextEditingController();
   final FirebaseAuthService _authService = FirebaseAuthService();
-  String verificationId = "";
-  @override
+  String _verificationId = ""; // Store the verification ID
+    @override
   void initState() {
     super.initState();
   }
@@ -152,11 +153,14 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
-                    onPressed: () async {
-                      String phoneNumber = _phoneNumberController
-                          .text; // Extract phone number from TextEditingController
-                      await sendOTP(phoneNumber);
-                    },
+                   onPressed: () async {
+    if (_phoneNumberController.text.isNotEmpty) {
+      _sendOtp(); // Trigger the OTP sending function
+    } else {
+      print("Please enter a valid phone number.");
+      // You can also show an error message to the user using a Snackbar or a similar method.
+    }
+  },
                   ),
                   SizedBox(height: 8.v),
                   _buildOTPField(context),
@@ -173,18 +177,21 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
                   ),
                   SizedBox(height: 16.v),
                   CustomElevatedButton(
-                    height: 35.v,
-                    text: "lbl_verify".tr,
-                    margin: EdgeInsets.only(right: 9.h),
-                    buttonStyle: CustomButtonStyles.none,
-                    decoration: CustomButtonStyles
-                        .gradientOnPrimaryContainerToPrimaryTL17Decoration,
-                    buttonTextStyle: theme.textTheme.labelMedium!,
-                    onPressed: () async {
-                      String otpNumber = _otpController.text;
-                      await verifyOTP(verificationId, otpNumber);
-                    },
-                  ),
+    height: 35.v,
+    text: "lbl_verify".tr,
+    margin: EdgeInsets.only(right: 9.h),
+    buttonStyle: CustomButtonStyles.none,
+    decoration: CustomButtonStyles.gradientOnPrimaryContainerToPrimaryTL17Decoration,
+    buttonTextStyle: theme.textTheme.labelMedium!,
+     onPressed: () async {
+    if (_otpController.text.isNotEmpty) {
+      _verifyOtp(); // Trigger the OTP verification function
+    } else {
+      print("Please enter the OTP.");
+      // Optionally show an error message to the user
+    }
+  },
+  ),
                   // SizedBox(height: 20.v),
                   // Subscribe_Widget(),
                 ],
@@ -264,26 +271,52 @@ class SellerOtpMobScreenState extends State<SellerOtpMobScreen> {
     );
   }
 
-  Future<void> sendOTP(String phoneNumber) async {
-    try {
-      await FirebaseAuthService().sendOTP(phoneNumber, (String id) {
-        setState(() {
-          verificationId = id;
-        });
-      });
-    } catch (e) {
-      print("Error sending OTP: $e");
-      // Handle the error (show error message, etc.)
-    }
-  }
+void _sendOtp() async {
+  String phoneNumber = _phoneNumberController.text.trim();
 
-  Future<void> verifyOTP(String verificationId, String smsCode) async {
-    try {
-      await FirebaseAuthService().verifyOTP(verificationId, smsCode, context);
-   
-      } catch (e) {
-      print("Error verifying OTP: $e");
-      // Handle the error (show error message, etc.)
-    }
+  if (phoneNumber.isNotEmpty) {
+    await _authService.sendOtp(
+      phoneNumber,
+      (String verificationId) {
+        setState(() {
+          _verificationId = verificationId;
+        });
+        print("OTP sent. Verification ID: $_verificationId");
+      },
+      (FirebaseAuthException e) {
+        print("Error sending OTP: ${e.message}");
+        // You can also display an error message to the user
+      },
+    );
+  } else {
+    print("Please enter a valid phone number.");
+    // Optionally display an error message to the user
   }
+}
+void _verifyOtp() async {
+  String otp = _otpController.text.trim();
+
+  if (_verificationId.isNotEmpty && otp.isNotEmpty) {
+    User? user = await _authService.verifyOtp(_verificationId, otp);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SellerProfileMobScreen()),
+      );
+    if (user != null) {
+      print("User signed in: ${user.phoneNumber}");
+      // Navigate to SellerProfile screen upon successful login
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => SellerProfileMobScreen()),
+      );
+    } else {
+      print("Invalid OTP.");
+      // You can also show an error message to the user
+    }
+  } else {
+    print("Please enter the OTP.");
+    // Optionally show an error message to the user
+  }
+}
+
 }

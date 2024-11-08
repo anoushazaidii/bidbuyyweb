@@ -1,9 +1,14 @@
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/presentation/seller_product_description_mob_screen/seller_product_description_mob_screen.dart';
+import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:flutter/material.dart';
 
+
 class SellerAddProductMobScreen extends StatefulWidget {
-  const SellerAddProductMobScreen({Key? key})
+    final String? sellerUid;
+
+  const SellerAddProductMobScreen({Key? key, required this.sellerUid})
       : super(
           key: key,
         );
@@ -11,8 +16,8 @@ class SellerAddProductMobScreen extends StatefulWidget {
   @override
   SellerAddProductMobScreenState createState() =>
       SellerAddProductMobScreenState();
-  static Widget builder(BuildContext context) {
-    return const SellerAddProductMobScreen();
+  static Widget builder(BuildContext context, String sellerUid) {
+    return SellerAddProductMobScreen(sellerUid: sellerUid);
   }
 }
 
@@ -127,6 +132,12 @@ class SellerAddProductMobScreenState extends State<SellerAddProductMobScreen> {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryDecoration,
                     buttonTextStyle: CustomTextStyles.titleMediumOnPrimary,
+                    onPressed: () {
+                       Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SellerProductDescriptionMobScreen(sellerUid: widget.sellerUid)),
+    );
+                    },
                   ),
                   SizedBox(height: 45.v),
                 ],

@@ -1,5 +1,7 @@
 
 import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/presentation/signup_mob_one_screen.dart';
+import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
 import 'package:bidbuyweb/widgets/app_bar/appbar_title_image.dart';
 import 'package:flutter/material.dart';
 
@@ -51,6 +53,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget{
               top: 7.v,
               right: 18.h,
             ),
+            onTap: (){
+                 Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SignupMobileScreen()),
+    );
+              
+            },
           ),
         ],
       );

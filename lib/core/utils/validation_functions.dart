@@ -42,6 +42,5 @@ bool isNumeric(
 
   return isInputStringValid;
 }
-=======
 
 

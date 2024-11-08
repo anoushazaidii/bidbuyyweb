@@ -7,6 +7,7 @@ import '../widgets/productcard_item_widget.dart';
 import '../domain/models/fortytwo_item_model.dart';
 import '../domain/models/productcard_item_model.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomepageMobScreen extends StatefulWidget {
   const HomepageMobScreen({Key? key})
@@ -20,10 +21,24 @@ class HomepageMobScreen extends StatefulWidget {
 
 class HomepageMobScreenState extends State<HomepageMobScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+ // List to hold product data from Firestore
+  List<ProductcardItemModel> products = [];
+  // Firestore instance
   @override
   void initState() {
     super.initState();
+    _fetchProducts();
+  }
+Future<void> _fetchProducts() async {
+    final querySnapshot = await _firestore.collection('product').get();
+
+    setState(() {
+      products = querySnapshot.docs
+          .map((doc) => ProductcardItemModel.fromFirestore(doc))
+          .toList();
+    });
   }
 
   @override
@@ -47,14 +62,10 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
                   width: 141.h,
                   text: "lbl_view_all",
                   buttonStyle: CustomButtonStyles.none,
-                  decoration: CustomButtonStyles
-                      .gradientOnPrimaryContainerToPrimaryTL22Decoration,
+                  decoration: CustomButtonStyles.gradientOnPrimaryContainerToPrimaryTL22Decoration,
                 ),
                 SizedBox(height: 20.v),
-                Divider(
-                  indent: 16.h,
-                  endIndent: 16.h,
-                ),
+                Divider(indent: 16.h, endIndent: 16.h),
                 SizedBox(height: 18.v),
                 _browseByCategoryWidget(context),
                 SizedBox(height: 27.v),
@@ -67,58 +78,30 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
     );
   }
 
-  /// Section Widget
+
+
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 40.h,
       leading: AppbarLeadingImage(
         imagePath: ImageConstant.imgFrame,
-        margin: EdgeInsets.only(
-          left: 16.h,
-          top: 7.v,
-          bottom: 2.v,
-        ),
+        margin: EdgeInsets.only(left: 16.h, top: 7.v, bottom: 2.v),
       ),
       title: AppbarTitleImage(
         imagePath: ImageConstant.imgText,
         margin: EdgeInsets.only(left: 16.h),
       ),
       actions: [
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgFrameBlack900,
-          margin: EdgeInsets.only(
-            left: 16.h,
-            top: 7.v,
-            right: 2.h,
-          ),
-        ),
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgFrameBlack900,
-          margin: EdgeInsets.only(
-            left: 12.h,
-            top: 7.v,
-            right: 2.h,
-          ),
-        ),
-        AppbarTrailingImage(
-          imagePath: ImageConstant.imgFrame24x24,
-          margin: EdgeInsets.only(
-            left: 12.h,
-            top: 7.v,
-            right: 18.h,
-          ),
-        ),
+        AppbarTrailingImage(imagePath: ImageConstant.imgFrameBlack900, margin: EdgeInsets.only(left: 16.h, top: 7.v, right: 2.h)),
+        AppbarTrailingImage(imagePath: ImageConstant.imgFrameBlack900, margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 2.h)),
+        AppbarTrailingImage(imagePath: ImageConstant.imgFrame24x24, margin: EdgeInsets.only(left: 12.h, top: 7.v, right: 18.h)),
       ],
     );
   }
 
-  /// Section Widget
   Widget offerMsg(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 47.h,
-        vertical: 7.v,
-      ),
+      padding: EdgeInsets.symmetric(horizontal: 47.h, vertical: 7.v),
       decoration: AppDecoration.gradientOnPrimaryContainerToPrimary,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -133,9 +116,7 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
                 ),
                 TextSpan(
                   text: "lbl_sign_up_now".tr,
-                  style: theme.textTheme.labelLarge!.copyWith(
-                    decoration: TextDecoration.underline,
-                  ),
+                  style: theme.textTheme.labelLarge!.copyWith(decoration: TextDecoration.underline),
                 ),
               ],
             ),
@@ -145,6 +126,8 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
       ),
     );
   }
+
+
 
   /// Section Widget
   Widget _homePageTextHeader(BuildContext context) {
@@ -280,9 +263,7 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
       ),
     );
   }
-
-  /// Section Widget
-  Widget _buildProductCard(BuildContext context) {
+ Widget _buildProductCard(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.h),
       child: GridView.builder(
@@ -294,12 +275,10 @@ class HomepageMobScreenState extends State<HomepageMobScreen> {
           crossAxisSpacing: 16.h,
         ),
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 6,
+        itemCount: products.length,
         itemBuilder: (context, index) {
-          ProductcardItemModel model = ProductcardItemModel();
-          return ProductcardItemWidget(
-            model,
-          );
+          ProductcardItemModel model = products[index];
+          return ProductcardItemWidget(model);
         },
       ),
     );

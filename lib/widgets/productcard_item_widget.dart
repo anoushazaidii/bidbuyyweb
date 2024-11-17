@@ -1,4 +1,6 @@
+import 'package:bidbuyweb/core/utils/image_constant.dart';
 import 'package:bidbuyweb/core/utils/size_utils.dart';
+import 'package:bidbuyweb/domain/models/product_model.dart';
 import 'package:bidbuyweb/presentation/product_mob_screen.dart';
 import 'package:bidbuyweb/theme/app_decoration.dart';
 import 'package:bidbuyweb/theme/custom_text_style.dart';
@@ -20,18 +22,43 @@ class ProductcardItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    print("Image URL: ${productcardItemModelObj.imageUrls != null && productcardItemModelObj.imageUrls!.isNotEmpty ? productcardItemModelObj.imageUrls![0] : 'No image available'}");
+    print(
+        "Image URL: ${productcardItemModelObj.imageUrls != null && productcardItemModelObj.imageUrls!.isNotEmpty ? productcardItemModelObj.imageUrls![0] : 'No image available'}");
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         InkWell(
-          onTap: (){
-            Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => ProductMobScreen()),
-    );
-          },
+  onTap: () {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ProductMobScreen(
+        product: ProductcardItemModel(
+          timeLeft: productcardItemModelObj.timeLeft ?? "No time left",
+          timeLeft1: productcardItemModelObj.timeLeft1 ?? "Not specified",
+          productName: productcardItemModelObj.productName ?? "Unknown Product",
+          price: productcardItemModelObj.price ?? "Rs.0",
+          bidCount: productcardItemModelObj.bidCount ?? 0,
+          biddingList: productcardItemModelObj.biddingList ?? [],
+          sellerName: productcardItemModelObj.sellerName ?? "Anonymous Seller",
+          sellerRating: productcardItemModelObj.sellerRating ?? "0.0",
+          id: productcardItemModelObj.id ?? "N/A",
+          imageUrls: productcardItemModelObj.imageUrls ??
+              [ImageConstant.imgImage7], // Fallback image
+          startingTime: productcardItemModelObj.startingTime ??
+              DateTime.now(), // Default to current time
+          endingTime: productcardItemModelObj.endingTime ??
+              DateTime.now().add(Duration(days: 1)), // Default to 1 day later
+          description: productcardItemModelObj.description ??
+              "No description available",
+        ),
+      ),
+    ),
+  );
+},
+
+
           child: Card(
             clipBehavior: Clip.antiAlias,
             elevation: 2,
@@ -49,12 +76,11 @@ class ProductcardItemWidget extends StatelessWidget {
               child: Stack(
                 alignment: Alignment.topRight,
                 children: [
-                  
                   CustomImageView(
-                     imagePath: (productcardItemModelObj.imageUrls != null && 
-                                 productcardItemModelObj.imageUrls!.isNotEmpty) 
-                                 ? productcardItemModelObj.imageUrls![0] 
-                                 : '', // Fallback if no image available
+                    imagePath: (productcardItemModelObj.imageUrls != null &&
+                            productcardItemModelObj.imageUrls!.isNotEmpty)
+                        ? productcardItemModelObj.imageUrls![0]
+                        : '', // Fallback if no image available
                     height: 172.v,
                     width: 171.h,
                     radius: BorderRadius.circular(11.h),
@@ -65,7 +91,8 @@ class ProductcardItemWidget extends StatelessWidget {
                       right: 8.h,
                       top: 8.v,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 4.h, vertical: 3.v),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 4.h, vertical: 3.v),
                         decoration: AppDecoration.fillPrimary,
                         child: Text(
                           productcardItemModelObj.timeLeft1!,

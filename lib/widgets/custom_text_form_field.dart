@@ -1,5 +1,7 @@
+import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/theme/custom_text_style.dart';
+import 'package:bidbuyweb/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
-import '../core/app_export.dart';
 
 class CustomTextFormField extends StatelessWidget {
   CustomTextFormField({
@@ -26,7 +28,6 @@ class CustomTextFormField extends StatelessWidget {
     this.fillColor,
     this.filled = false,
     this.validator,
-
   }) : super(
           key: key,
         );

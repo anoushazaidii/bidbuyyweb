@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/core/utils/validation_functions.dart';
@@ -45,11 +44,11 @@ class SellerProfileMobScreenState extends State<SellerProfileMobScreen> {
   TextEditingController? _phoneController;
   // TextEditingController? _idCardFrontController;
   // TextEditingController? _idCardBackController;
-Uint8List? _idCardFrontImage;
-Uint8List? _idCardBackImage;
+  Uint8List? _idCardFrontImage;
+  Uint8List? _idCardBackImage;
 
   final ImagePicker _picker = ImagePicker();
-  
+
   @override
   void initState() {
     super.initState();
@@ -69,42 +68,44 @@ Uint8List? _idCardBackImage;
     // _idCardBackController?.dispose();
     super.dispose();
   }
-Future<void> _pickImage(bool isFront) async {
-  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-  if (pickedFile != null) {
-    final Uint8List fileBytes = await pickedFile.readAsBytes();  // Convert to Uint8List
-    setState(() {
-      if (isFront) {
-        _idCardFrontImage = fileBytes;
-      } else {
-        _idCardBackImage = fileBytes;
+
+  Future<void> _pickImage(bool isFront) async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      final Uint8List fileBytes =
+          await pickedFile.readAsBytes(); // Convert to Uint8List
+      setState(() {
+        if (isFront) {
+          _idCardFrontImage = fileBytes;
+        } else {
+          _idCardBackImage = fileBytes;
+        }
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
+    try {
+      // Check if the image is too large
+      if (imageData.lengthInBytes > 5 * 1024 * 1024) {
+        print("Image size exceeds the maximum allowed limit of 5 MB.");
+        return null;
       }
-    });
+
+      final ref = FirebaseStorage.instance.ref().child('id_cards/$imageName');
+      final uploadTask =
+          ref.putData(imageData); // Uploading image as bytes (Uint8List)
+
+      final snapshot = await uploadTask.whenComplete(() => null);
+      final downloadUrl =
+          await snapshot.ref.getDownloadURL(); // Get download URL
+
+      return downloadUrl; // Return the URL of the uploaded image
+    } catch (e) {
+      print("Error uploading image: $e");
+      return null;
+    }
   }
-}
-
-
-Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
-  try {
-     // Check if the image is too large
-  if (imageData.lengthInBytes > 5 * 1024 * 1024) {
-    print("Image size exceeds the maximum allowed limit of 5 MB.");
-    return null;
-  }
-
-    final ref = FirebaseStorage.instance.ref().child('id_cards/$imageName');
-    final uploadTask = ref.putData(imageData); // Uploading image as bytes (Uint8List)
-
-    final snapshot = await uploadTask.whenComplete(() => null);
-    final downloadUrl = await snapshot.ref.getDownloadURL(); // Get download URL
-
-    return downloadUrl;  // Return the URL of the uploaded image
-  } catch (e) {
-    print("Error uploading image: $e");
-    return null;
-  }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +141,6 @@ Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
   }
 
   Widget _buildProfileInformationField(
-    
     BuildContext context,
     String label,
     TextEditingController? controller,
@@ -238,7 +238,6 @@ Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
                     "lbl_name2".tr,
                     _nameController,
                     "Enter Name",
-                  
                   ),
                   SizedBox(height: 19.v),
                   _buildProfileInformationField(
@@ -268,8 +267,8 @@ Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
                   //   _idCardBackController,
                   //   "Enter ID Card Back",
                   // ),
-                _buildImageUploadSection("Upload ID Card Front", true),
-                _buildImageUploadSection("Upload ID Card Back", false),
+                  _buildImageUploadSection("Upload ID Card Front", true),
+                  _buildImageUploadSection("Upload ID Card Back", false),
                   SizedBox(height: 24.v),
                   CustomElevatedButton(
                     height: 35.v,
@@ -279,14 +278,14 @@ Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
                     decoration: CustomButtonStyles
                         .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                     buttonTextStyle: theme.textTheme.labelMedium!,
-                     onPressed: () async {
-                    // Validate inputs before submitting
-                    if (_validateInputs()) {
-                      print("Submitting");
-                      await _submit();
-                      print("Submitted");
-                    }
-                  },
+                    onPressed: () async {
+                      // Validate inputs before submitting
+                      if (_validateInputs()) {
+                        print("Submitting");
+                        await _submit();
+                        print("Submitted");
+                      }
+                    },
                   ),
                   SizedBox(height: 28.v),
                 ],
@@ -298,103 +297,105 @@ Future<String?> _uploadImage(Uint8List imageData, String imageName) async {
       ),
     );
   }
-  
+
 // Validation functions
-bool _validateInputs() {
-  final name = _nameController?.text;
-  final email = _emailController!.text;
-  final phone = _phoneController!.text;
+  bool _validateInputs() {
+    final name = _nameController?.text;
+    final email = _emailController!.text;
+    final phone = _phoneController!.text;
 
-  // Validate Name
-  if (name!.isEmpty) {
-    _showError("Name cannot be empty");
-    return false;
-  }
-
-  // Validate Email using isValidEmail function
-  if (!isValidEmail(email, isRequired: true)) {
-    _showError("Please enter a valid email");
-    return false;
-  }
-
-  // Validate Phone using isNumeric function
-  if (!isNumeric(phone, isRequired: true)) {
-    _showError("Please enter a valid phone number");
-    return false;
-  }
-
-  return true;
-}
-void _showError(String message) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(message)),
-  );
-}
-Future<void> _submit() async {
-  if (_formKey.currentState!.validate()) {
-    String? frontImageUrl;
-    String? backImageUrl;
-
-    // Check if images are picked and upload them
-    if (_idCardFrontImage != null) {
-      frontImageUrl = await _uploadImage(_idCardFrontImage!, 'id_card_front_${_nameController!.text}');
+    // Validate Name
+    if (name!.isEmpty) {
+      _showError("Name cannot be empty");
+      return false;
     }
 
-    if (_idCardBackImage != null) {
-      backImageUrl = await _uploadImage(_idCardBackImage!, 'id_card_back_${_nameController!.text}');
+    // Validate Email using isValidEmail function
+    if (!isValidEmail(email, isRequired: true)) {
+      _showError("Please enter a valid email");
+      return false;
     }
 
-    // After uploading both images, check if they are uploaded successfully
-    if (frontImageUrl != null && backImageUrl != null) {
-      // Create a seller profile with the image URLs
-      SellerProfile profile = SellerProfile(
-        name: _nameController!.text,
-        email: _emailController!.text,
-        phone: _phoneController!.text,
-        idCardFront: frontImageUrl,
-        idCardBack: backImageUrl,
-      );
-
-      // Navigate to the next screen with the seller profile
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SellerAdressMobScreen(sellerProfile: profile),
-        ),
-      );
-    } else {
-      print("Error: Image upload failed.");
+    // Validate Phone using isNumeric function
+    if (!isNumeric(phone, isRequired: true)) {
+      _showError("Please enter a valid phone number");
+      return false;
     }
+
+    return true;
   }
-}
 
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+  }
 
-Widget _buildImageUploadSection(String label, bool isFront) {
-  Uint8List? image = isFront ? _idCardFrontImage : _idCardBackImage;
+  Future<void> _submit() async {
+    if (_formKey.currentState!.validate()) {
+      String? frontImageUrl;
+      String? backImageUrl;
 
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label, style: CustomTextStyles.bodyMediumGray90001),
-      SizedBox(height: 8.v),
-      GestureDetector(
-        onTap: () => _pickImage(isFront),
-        child: Container(
-          height: 150.v,
-          width: 150.h,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
+      // Check if images are picked and upload them
+      if (_idCardFrontImage != null) {
+        frontImageUrl = await _uploadImage(
+            _idCardFrontImage!, 'id_card_front_${_nameController!.text}');
+      }
+
+      if (_idCardBackImage != null) {
+        backImageUrl = await _uploadImage(
+            _idCardBackImage!, 'id_card_back_${_nameController!.text}');
+      }
+
+      // After uploading both images, check if they are uploaded successfully
+      if (frontImageUrl != null && backImageUrl != null) {
+        // Create a seller profile with the image URLs
+        SellerProfile profile = SellerProfile(
+          name: _nameController!.text,
+          email: _emailController!.text,
+          phone: _phoneController!.text,
+          idCardFront: frontImageUrl,
+          idCardBack: backImageUrl,
+        );
+
+        // Navigate to the next screen with the seller profile
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SellerAdressMobScreen(sellerProfile: profile),
           ),
-          child: Center(
-            child: image != null
-              ? Image.memory(image)
-              : Icon(Icons.upload, size: 50),
+        );
+      } else {
+        print("Error: Image upload failed.");
+      }
+    }
+  }
+
+  Widget _buildImageUploadSection(String label, bool isFront) {
+    Uint8List? image = isFront ? _idCardFrontImage : _idCardBackImage;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: CustomTextStyles.bodyMediumGray90001),
+        SizedBox(height: 8.v),
+        GestureDetector(
+          onTap: () => _pickImage(isFront),
+          child: Container(
+            height: 150.v,
+            width: 150.h,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(
+              child: image != null
+                  ? Image.memory(image)
+                  : Icon(Icons.upload, size: 50),
+            ),
           ),
         ),
-      ),
-    ],
-  );
-}
-
+      ],
+    );
+  }
 }

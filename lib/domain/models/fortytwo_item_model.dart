@@ -1,7 +1,5 @@
 import 'package:bidbuyweb/core/utils/image_constant.dart';
 
-import '../../core/app_export.dart';
-
 /// This class is used in the [fortytwo_item_widget] screen.
 class FortytwoItemModel {
   FortytwoItemModel({

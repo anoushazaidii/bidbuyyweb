@@ -1,93 +1,3 @@
-// // import 'package:bidbuyweb/core/utils/image_constant.dart';
-
-// // import '../../core/app_export.dart';
-
-// // /// This class is used in the [productcard_item_widget] screen.
-// // class ProductcardItemModel {
-// //   ProductcardItemModel({
-// //     this.timeLeft,
-// //     this.timeLeft1,
-// //     this.productName,
-// //     this.price,
-// //     this.bidCount,
-// //     this.sellerName,
-// //     this.sellerRating,
-// //     this.id,
-// //   }) {
-// //     timeLeft = timeLeft ?? ImageConstant.imgImage7;
-// //     timeLeft1 = timeLeft1 ?? "Time left 4d 20h";
-// //     productName = productName ?? "Product name";
-// //     price = price ?? "Rs.120";
-// //     bidCount = bidCount ?? "3 bids";
-// //     sellerName = sellerName ?? "(Seller name)";
-// //     sellerRating = sellerRating ?? "45";
-// //     id = id ?? "";
-// //   }
-
-// //   String? timeLeft;
-
-// //   String? timeLeft1;
-
-// //   String? productName;
-
-// //   String? price;
-
-// //   String? bidCount;
-
-// //   String? sellerName;
-
-// //   String? sellerRating;
-
-// //   String? id;
-// // }
-
-
-// import 'package:bidbuyweb/core/utils/image_constant.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-// class ProductcardItemModel {
-//   String? timeLeft;
-//   String? timeLeft1;
-//   String? productName;
-//   String? price;
-//   String? bidCount;
-//   String? sellerName;
-//   String? sellerRating;
-//   String? id;
-//   List<String>? imageUrls; // Change to a list of image URLs
-//   ProductcardItemModel({
-//     this.timeLeft,
-//     this.timeLeft1,
-//     this.productName,
-//     this.price,
-//     this.bidCount,
-//     this.sellerName,
-//     this.sellerRating,
-//     this.id,
-//     this.imageUrls,
-    
-//   });
-
-//   // Method to convert Firestore document data to ProductcardItemModel instance
-//   factory ProductcardItemModel.fromFirestore(DocumentSnapshot doc) {
-//     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-//     print("Fetched data from Firestore: $data");
-
-//     return ProductcardItemModel(
-//       timeLeft: data['timeLeft'] ?? ImageConstant.imgImage7,
-//       timeLeft1: data['timeLeft1'] ?? "Time left 4d 20h",
-//       productName: data['productName'] ?? "Product name",
-//       price: data['initialPrice'] ?? "Rs.120",
-//       bidCount: "${data['biddingList']?.length ?? 0} bids",
-//       sellerName: data['sellerName'] ?? "(Seller name)",
-//       sellerRating: data['sellerRating']?.toString() ?? "0",
-//       id: doc.id,
-//      imageUrls: (data['photosList'] != null && data['photosList'] is List)
-//           ? List<String>.from(data['photosList']) // Convert to List<String>
-//           : [ImageConstant.imgImage7], // Fallback to a list with a default image
-//     );
-//   }
-// }
 
 import 'package:bidbuyweb/core/utils/image_constant.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -97,27 +7,30 @@ class ProductcardItemModel {
   String? timeLeft;
   String? timeLeft1;
   String? productName;
-  String? price;
-  String? bidCount;
+  String? price; // Represents initial price
+  int? bidCount; // Number of bids
+  List<Map<String, dynamic>>? biddingList; // Details of the bids
   String? sellerName;
   String? sellerRating;
   String? id;
   List<String>? imageUrls;
   DateTime? startingTime;
   DateTime? endingTime;
-
+  String? description;
   ProductcardItemModel({
     this.timeLeft,
     this.timeLeft1,
     this.productName,
     this.price,
     this.bidCount,
+    this.biddingList,
     this.sellerName,
     this.sellerRating,
     this.id,
     this.imageUrls,
     this.startingTime,
     this.endingTime,
+    this.description,
   });
 
   // Method to convert Firestore document data to ProductcardItemModel instance
@@ -127,35 +40,39 @@ class ProductcardItemModel {
 
     final dateFormat = DateFormat("MM/dd/yyyy");
 
+    // Parsing starting and ending times
     DateTime? startingTime = data['startingTime'] is Timestamp
         ? (data['startingTime'] as Timestamp).toDate()
         : dateFormat.parse(data['startingTime'], true);
-        
+
     DateTime? endingTime = data['endingTime'] is Timestamp
         ? (data['endingTime'] as Timestamp).toDate()
         : dateFormat.parse(data['endingTime'], true);
 
     // Calculate time left
     String? timeLeft;
-    if (endingTime != null) {
-      Duration difference = endingTime.difference(DateTime.now());
-      timeLeft = _formatDuration(difference);
-    }
+    Duration difference = endingTime.difference(DateTime.now());
+    timeLeft = _formatDuration(difference);
 
-    // Print the times and time left for verification
-    print("Starting Time: $startingTime");
-    print("Ending Time: $endingTime");
-    print("Time Left: $timeLeft");
+    // Extract bidding list
+    List<Map<String, dynamic>>? biddingList =
+        (data['biddingList'] != null && data['biddingList'] is List)
+            ? List<Map<String, dynamic>>.from(data['biddingList'])
+            : [];
+
+    // Calculate bid count
+    int bidCount = biddingList.length;
 
     return ProductcardItemModel(
-      timeLeft: timeLeft ?? "Time ended",
-      // timeLeft1: data['timeLeft1'] ?? "Time left 4d 20h",
+      timeLeft: timeLeft ?? "TimeLeft",
       productName: data['productName'] ?? "Product name",
-      price: data['initialPrice'] ?? "Rs.120",
-      bidCount: "${data['biddingList']?.length ?? 0} bids",
+      price: data['initialPrice'] ?? "Rs.120", // Initial price
+      bidCount: bidCount, // Total number of bids
+      biddingList: biddingList, // List of bid details
       sellerName: data['sellerName'] ?? "(Seller name)",
       sellerRating: data['sellerRating']?.toString() ?? "0",
       id: doc.id,
+      description: data["description"] ?? "description",
       imageUrls: (data['photosList'] != null && data['photosList'] is List)
           ? List<String>.from(data['photosList'])
           : [ImageConstant.imgImage7],

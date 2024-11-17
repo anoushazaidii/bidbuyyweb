@@ -1,5 +1,6 @@
+import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
-import '../core/app_export.dart';
 
 /// A collection of pre-defined text styles for customizing text appearance,
 /// categorized by different font families and weights.
@@ -299,7 +300,7 @@ class CustomTextStyles {
         color: theme.colorScheme.primaryContainer,
         fontWeight: FontWeight.w500,
       );
-      
+
   static get titleSmallBlack900 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.black900,
       );

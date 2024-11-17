@@ -12,22 +12,23 @@ class ProductModel {
   List<dynamic>? photosList;
   String? startingTime;
   String? endingTime;
+  int? bidCount;
 
-  ProductModel({
-    this.sellerId,
-    this.productId,
-    this.productName,
-    this.description,
-    this.length,
-    this.width,
-    this.height,
-    this.initialPrice,
-    this.biddingList,
-    this.categoriesList,
-    this.photosList,
-    this.endingTime,
-    this.startingTime
-  });
+  ProductModel(
+   { this.bidCount,
+      this.sellerId,
+      this.productId,
+      this.productName,
+      this.description,
+      this.length,
+      this.width,
+      this.height,
+      this.initialPrice,
+      this.biddingList,
+      this.categoriesList,
+      this.photosList,
+      this.endingTime,
+      this.startingTime});
 
   Map<String, dynamic> toMap(ProductModel product) {
     var data = Map<String, dynamic>();
@@ -44,6 +45,7 @@ class ProductModel {
     data['photosList'] = product.photosList;
     data['startingTime'] = product.startingTime;
     data['endingTime'] = product.endingTime;
+    data['bidCount'] = product.bidCount;
 
     return data;
   }
@@ -62,5 +64,7 @@ class ProductModel {
     photosList = List<dynamic>.from(mapData['photosList'] ?? []);
     startingTime = mapData['startingTime'];
     endingTime = mapData['endingTime'];
+    bidCount = mapData['bidCount']??0;
+
   }
 }

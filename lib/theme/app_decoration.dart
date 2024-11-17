@@ -1,11 +1,13 @@
+import 'package:bidbuyweb/core/app_export.dart';
+import 'package:bidbuyweb/theme/theme_helper.dart';
 import 'package:flutter/material.dart';
-import '../core/app_export.dart';
+
 class AppDecoration {
   // Fill decorations
   static BoxDecoration get fillGray => BoxDecoration(
         color: appTheme.gray20003,
       );
-      
+
   static BoxDecoration get fillGray5001 => BoxDecoration(
         color: appTheme.gray20001,
       );

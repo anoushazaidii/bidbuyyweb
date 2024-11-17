@@ -7,6 +7,7 @@ import 'package:bidbuyweb/widgets/custom_checkbox_button.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -171,6 +172,23 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
                           .gradientOnPrimaryContainerToPrimaryTL17Decoration,
                       buttonTextStyle: theme.textTheme.labelMedium!),
                   SizedBox(height: 16.v),
+                  CustomElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupMobScreen()),
+                        );
+                      },
+                      height: 35.v,
+                      width: 320.v,
+                      text: "SignIn".tr,
+                      margin: EdgeInsets.only(right: 9.h),
+                      buttonStyle: CustomButtonStyles.none,
+                      decoration: CustomButtonStyles
+                          .gradientOnPrimaryContainerToPrimaryTL17Decoration,
+                      buttonTextStyle: theme.textTheme.labelMedium!),
+                  SizedBox(height: 16.v),
                   Padding(
                       padding: EdgeInsets.only(right: 9.h),
                       child: Row(
@@ -234,14 +252,25 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
     });
   }
 
-  void _signUp() async {
+void _signUp() async {
+  setState(() {
+    isSigningUp = true;
+  });
+
+  String email = _emailController.text.trim();
+  String password = _passwordController.text.trim();
+
+  if (email.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Email and password cannot be empty")),
+    );
     setState(() {
-      isSigningUp = true;
+      isSigningUp = false;
     });
+    return;
+  }
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
+  try {
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
     setState(() {
@@ -249,16 +278,61 @@ class SignupMobileScreenState extends State<SignupMobileScreen> {
     });
 
     if (user != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("User created")));
-             Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => SignupMobScreen() ),
-    );
+      // Add user data to Firestore
+      await FirebaseFirestore.instance.collection("users").doc(user.uid).set({
+        "uid": user.uid,
+        "email": user.email,
+        "createdAt": FieldValue.serverTimestamp(),
+      });
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User created successfully")),
+      );
+
+      // Navigate to the next screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignupMobScreen()),
+      );
     } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Can not create user")));
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Could not create user")),
+      );
     }
+  } catch (e) {
+    setState(() {
+      isSigningUp = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Error: $e")),
+    );
   }
+}
+
+  // void _signUp() async {
+  //   setState(() {
+  //     isSigningUp = true;
+  //   });
+
+  //   String email = _emailController.text;
+  //   String password = _passwordController.text;
+
+  //   User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+  //   setState(() {
+  //     isSigningUp = false;
+  //   });
+
+  //   if (user != null) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text("User created")));
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => SignupMobScreen()),
+  //     );
+  //   } else {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(const SnackBar(content: Text("Can not create user")));
+  //   }
+  // }
 }

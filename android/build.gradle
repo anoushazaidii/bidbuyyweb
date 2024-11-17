@@ -1,6 +1,8 @@
 buildscript {
     ext.kotlin_version = '1.7.10'
     repositories {
+        maven { url 'https://jitpack.io' } // Ensure JitPack is added
+
         google()
         mavenCentral()
     }
@@ -13,11 +15,11 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-
 allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' } // Ensure this is included
     }
 }
 

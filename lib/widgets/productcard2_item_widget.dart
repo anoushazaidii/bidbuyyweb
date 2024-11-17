@@ -42,7 +42,7 @@ class Productcard2ItemWidget extends StatelessWidget {
               alignment: Alignment.topRight,
               children: [
                 CustomImageView(
-                  imagePath: productcard2ItemModelObj?.timeLeft,
+                  imagePath: productcard2ItemModelObj.timeLeft,
                   height: 172.v,
                   width: 171.h,
                   radius: BorderRadius.circular(

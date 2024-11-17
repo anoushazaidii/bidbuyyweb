@@ -9,7 +9,7 @@ class HomepageMobModel {
         timeLeft1: "Time left 4d 20h",
         productName: "Product name",
         price: "Rs.120",
-        bidCount: "3 bids",
+        bidCount: 3,
         sellerName: "(Seller name)",
         sellerRating: "45"),
     ProductcardItemModel(
@@ -17,7 +17,7 @@ class HomepageMobModel {
         timeLeft1: "Time left 4d 20h",
         productName: "Product name",
         price: "Rs.120",
-        bidCount: "3 bids",
+        bidCount: 3,
         sellerName: "(Seller name)",
         sellerRating: "45"),
     ProductcardItemModel(
@@ -25,7 +25,7 @@ class HomepageMobModel {
         timeLeft1: "Time left 4d 20h",
         productName: "Product name",
         price: "Rs.120",
-        bidCount: "3 bids",
+        bidCount: 3,
         sellerName: "(Seller name)",
         sellerRating: "45"),
     ProductcardItemModel(
@@ -33,7 +33,7 @@ class HomepageMobModel {
         timeLeft1: "Time left 4d 20h",
         productName: "Product name",
         price: "Rs.120",
-        bidCount: "3 bids",
+        bidCount: 3,
         sellerName: "(Seller name)",
         sellerRating: "45")
   ];

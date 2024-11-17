@@ -21,7 +21,7 @@ class FortytwoItemWidget extends StatelessWidget {
     return Column(
       children: [
         CustomImageView(
-          imagePath: fortytwoItemModelObj?.headPhones,
+          imagePath: fortytwoItemModelObj.headPhones,
           height: 88.adaptSize,
           width: 88.adaptSize,
           radius: BorderRadius.circular(

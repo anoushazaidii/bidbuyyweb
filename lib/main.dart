@@ -18,6 +18,7 @@ import 'package:bidbuyweb/presentation/seller_view/seller_profile_mob_screen.dar
 import 'package:bidbuyweb/firebase_options.dart';
 import 'package:bidbuyweb/presentation/signup_mob_one_screen.dart';
 import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
+import 'package:bidbuyweb/presentation/welcome_screen.dart';
 import 'package:bidbuyweb/theme/provider/fav_providor.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -30,10 +31,11 @@ var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   GoogleSignIn _googleSignIn = GoogleSignIn(
-      clientId: '444041450729-nlgvltq2t0ub73oehafg8rjjrqo32cst.apps.googleusercontent.com',
-    );
-await Firebase.initializeApp(
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    clientId:
+        '444041450729-nlgvltq2t0ub73oehafg8rjjrqo32cst.apps.googleusercontent.com',
+  );
+  await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await Future.wait([
@@ -45,8 +47,6 @@ await Firebase.initializeApp(
   runApp(MyApp());
 }
 
-
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -57,10 +57,11 @@ class MyApp extends StatelessWidget {
             ChangeNotifierProvider(create: (_) => ThemeProvider()),
             ChangeNotifierProvider(create: (_) => SellerAdressMobProvider()),
             ChangeNotifierProvider(create: (_) => SellerAccountMobProvider()),
-            ChangeNotifierProvider(create: (_) => AddProductDeliveryMobProvider()),
-            ChangeNotifierProvider(create: (_) => SellerProductDescriptionMobProvider()),
-            ChangeNotifierProvider(create: (_) => FavoriteProvider ()),
-            
+            ChangeNotifierProvider(
+                create: (_) => AddProductDeliveryMobProvider()),
+            ChangeNotifierProvider(
+                create: (_) => SellerProductDescriptionMobProvider()),
+            ChangeNotifierProvider(create: (_) => FavoriteProvider()),
           ],
           child: MaterialApp(
             theme: theme,
@@ -79,10 +80,11 @@ class MyApp extends StatelessWidget {
                 '',
               ),
             ],
-            home:SignupMobileScreen (),
+            home: WelcomeScreen(),
             // home: UserOrSellerScreen ()
           ),
-        );; 
+        );
+        ;
       },
     );
   }

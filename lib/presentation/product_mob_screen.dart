@@ -1,5 +1,7 @@
 import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/domain/models/product_model.dart';
+import 'package:bidbuyweb/domain/models/productcard_item_model.dart';
+import 'package:bidbuyweb/presentation/bid_product_mob_dialog.dart';
 import 'package:bidbuyweb/widgets/app_bar/appBar_widget.dart';
 import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
@@ -8,7 +10,7 @@ import 'package:bidbuyweb/widgets/subscribe_widget.dart';
 import 'package:flutter/material.dart';
 
 class ProductMobScreen extends StatefulWidget {
-  final ProductModel product;
+  final ProductcardItemModel product;
   const ProductMobScreen({Key? key, required this.product})
       : super(
           key: key,
@@ -50,7 +52,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                             padding: EdgeInsets.only(bottom: 1.v),
                             child: Text(
                               "lbl_auction".tr,
-                          // widget.product.
+                              // widget.product.
                               style: CustomTextStyles.bodyMediumBlack900_1,
                             ),
                           ),
@@ -64,17 +66,17 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                               bottom: 2.v,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 6.h,
-                              top: 1.v,
-                            ),
-                            child: Text(
-                              // "lbl_category".tr,
-                              widget.product.categoriesList.toString(),
-                              style: CustomTextStyles.bodyMediumGray900,
-                            ),
-                          ),
+                          // Padding(
+                          //   padding: EdgeInsets.only(
+                          //     left: 6.h,
+                          //     top: 1.v,
+                          //   ),
+                          //   child: Text(
+                          //     // "lbl_category".tr,
+                          //     widget.product.categories.toString(),
+                          //     style: CustomTextStyles.bodyMediumGray900,
+                          //   ),
+                          // ),
                           CustomImageView(
                             imagePath: ImageConstant.imgArrowRight,
                             height: 14.adaptSize,
@@ -102,7 +104,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                   ),
                   SizedBox(height: 20.v),
                   CustomImageView(
-                    imagePath: widget.product.photosList![0],
+                    imagePath: widget.product.imageUrls![0],
                     height: 386.v,
                     width: 358.h,
                   ),
@@ -117,7 +119,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       child: Row(
                         children: [
                           CustomImageView(
-                            imagePath: widget.product.photosList![1],
+                            imagePath: widget.product.imageUrls![1],
                             height: 54.v,
                             width: 69.h,
                           ),
@@ -145,7 +147,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       padding: EdgeInsets.only(left: 16.h),
                       child: Text(
                         // "msg_time_left_4d_20h2".tr,
-                       widget.product.endingTime.toString(),
+                        widget.product.endingTime.toString(),
                         style: CustomTextStyles.bodyLargePrimary,
                       ),
                     ),
@@ -159,7 +161,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                           widget.product.initialPrice??"",
+                            widget.product.price ?? "",
                             style: CustomTextStyles.headlineSmallInterBlack900,
                           ),
                           Padding(
@@ -169,7 +171,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                               bottom: 5.v,
                             ),
                             child: Text(
-                            widget.product.biddingList!.length.toString(),
+                              widget.product.biddingList!.length.toString(),
                               style:
                                   CustomTextStyles.bodyMediumPoppinsBlack900_1,
                             ),
@@ -186,7 +188,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
                       right: 24.h,
                     ),
                     child: Text(
-                      widget.product.description??"",
+                      widget.product.description ?? "",
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style:
@@ -265,9 +267,13 @@ class ProductMobScreenState extends State<ProductMobScreen> {
           decoration: CustomButtonStyles
               .gradientOnPrimaryContainerToPrimaryTL4Decoration,
           buttonTextStyle: CustomTextStyles.titleMediumPoppinsPrimaryContainer,
-          onPressed: () =>
-              // NavigatorService.pushNamed(AppRoutes.homepageMobScreen),
-              Navigator.pushNamed(context, RoutesName.signUp)),
+          onPressed:(){
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => BidProductMobScreen(productId: widget.product.id.toString(),)),
+                );
+          }
+          ),
     );
   }
 
@@ -421,7 +427,7 @@ class ProductMobScreenState extends State<ProductMobScreen> {
             width: 307.h,
             margin: EdgeInsets.only(left: 3.h),
             child: Text(
-             widget.product.description??"",
+              widget.product.description ?? "",
               maxLines: 9,
               overflow: TextOverflow.ellipsis,
               style: CustomTextStyles.bodyMediumInterBlack900.copyWith(

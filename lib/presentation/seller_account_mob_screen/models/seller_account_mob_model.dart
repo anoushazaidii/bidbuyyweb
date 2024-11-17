@@ -1,5 +1,4 @@
-
-import '../../../core/app_export.dart';
+import 'package:bidbuyweb/domain/models/selection_popup_model.dart';
 
 class SellerAccountMobModel {
   List<SelectionPopupModel> dropdownItemList = [

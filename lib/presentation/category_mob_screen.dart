@@ -1,9 +1,15 @@
+import 'package:bidbuyweb/core/app_export.dart';
 import 'package:bidbuyweb/presentation/seller_view/add_product_mob_screen.dart';
+import 'package:bidbuyweb/theme/app_decoration.dart';
+import 'package:bidbuyweb/theme/custom_text_style.dart';
+import 'package:bidbuyweb/widgets/app_bar/appBar_widget.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
+import 'package:bidbuyweb/widgets/custom_image_view.dart';
+import '../core/utils/image_constant.dart';
 import '../widgets/productcard2_item_widget.dart';
-import '../domain/models/category_mob_model.dart';
 import '../domain/models/productcard2_item_model.dart';
 import 'package:flutter/material.dart';
+
 class CategoryMobScreen extends StatefulWidget {
   const CategoryMobScreen({Key? key})
       : super(
@@ -12,7 +18,6 @@ class CategoryMobScreen extends StatefulWidget {
 
   @override
   CategoryMobScreenState createState() => CategoryMobScreenState();
- 
 }
 
 class CategoryMobScreenState extends State<CategoryMobScreen> {
@@ -28,7 +33,7 @@ class CategoryMobScreenState extends State<CategoryMobScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar:AppBarWidget(),
+        appBar: AppBarWidget(),
         body: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -79,7 +84,7 @@ class CategoryMobScreenState extends State<CategoryMobScreen> {
                 SizedBox(height: 26.v),
                 _buildProductCard(context),
                 SizedBox(height: 19.v),
-               Subscribe_Widget(),
+                Subscribe_Widget(),
               ],
             ),
           ),
@@ -87,7 +92,6 @@ class CategoryMobScreenState extends State<CategoryMobScreen> {
       ),
     );
   }
-
 
   /// Section Widget
   Widget _buildCategoryText(BuildContext context) {
@@ -117,7 +121,7 @@ class CategoryMobScreenState extends State<CategoryMobScreen> {
           ),
           const Spacer(),
           CustomIconButton(
-    //         
+            //
             height: 32.adaptSize,
             width: 32.adaptSize,
             padding: EdgeInsets.all(8.h),
@@ -136,27 +140,25 @@ class CategoryMobScreenState extends State<CategoryMobScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 15.h),
       child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              mainAxisExtent: 254.v,
-              crossAxisCount: 2,
-              mainAxisSpacing: 16.h,
-              crossAxisSpacing: 16.h,
-            ),
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              Productcard2ItemModel model =
-                  Productcard2ItemModel();
-              return Productcard2ItemWidget(
-                model,
-              );
-            },
-          ),
+        shrinkWrap: true,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          mainAxisExtent: 254.v,
+          crossAxisCount: 2,
+          mainAxisSpacing: 16.h,
+          crossAxisSpacing: 16.h,
+        ),
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 6,
+        itemBuilder: (context, index) {
+          Productcard2ItemModel model = Productcard2ItemModel();
+          return Productcard2ItemWidget(
+            model,
+          );
+        },
+      ),
     );
   }
 }
-
 
 class numbers extends StatelessWidget {
   const numbers({

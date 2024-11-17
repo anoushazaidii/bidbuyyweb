@@ -1,4 +1,5 @@
 import 'package:bidbuyweb/presentation/seller_view/seller_otp_screen.dart';
+import 'package:bidbuyweb/presentation/signup_mob_one_screen.dart';
 import 'package:bidbuyweb/presentation/signup_mob_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,8 @@ class WelcomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
-        backgroundColor: Color(0XFF7A2334), // Apply onPrimaryContainer color to AppBar
+        backgroundColor:
+            Color(0XFF7A2334), // Apply onPrimaryContainer color to AppBar
         title: Text(
           'Select Login Type',
           style: TextStyle(color: Colors.white, fontSize: 22),
@@ -28,7 +30,8 @@ class WelcomeScreen extends StatelessWidget {
               padding: EdgeInsets.all(20),
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/avatar.png'), // Replace with your avatar image path
+                backgroundImage: AssetImage(
+                    'assets/images/avatar.png'), // Replace with your avatar image path
               ),
             ),
             SizedBox(height: 40),
@@ -53,7 +56,7 @@ class WelcomeScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignupMobScreen()),
+                  MaterialPageRoute(builder: (context) => SignupMobileScreen()),
                 );
               },
               child: Text(
@@ -88,4 +91,3 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 }
-

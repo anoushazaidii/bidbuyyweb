@@ -7,7 +7,6 @@ import 'package:bidbuyweb/widgets/custom_elevated_button.dart';
 import 'package:bidbuyweb/widgets/custom_icon_button.dart';
 import 'package:bidbuyweb/widgets/custom_text_form_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../widgets/app_bar/appbar_title_image.dart';
 import 'package:flutter/material.dart';
 
 class SignupMobScreen extends StatefulWidget {
@@ -15,7 +14,6 @@ class SignupMobScreen extends StatefulWidget {
 
   @override
   SignupMobScreenState createState() => SignupMobScreenState();
-
 }
 
 // ignore_for_file: must_be_immutable
@@ -55,13 +53,12 @@ class SignupMobScreenState extends State<SignupMobScreen> {
                       child:
                           Stack(alignment: Alignment.bottomCenter, children: [
                         _buildFrameSeven(context),
-                      
+
                         // _buildFrameSubscribe(context)
                         Subscribe_Widget(),
                       ]))
                 ])))));
   }
-
 
   /// Section Widget
   Widget _buildFrameEmail(BuildContext context) {
@@ -107,8 +104,8 @@ class SignupMobScreenState extends State<SignupMobScreen> {
           SizedBox(height: 5.v),
           Padding(
               padding: EdgeInsets.only(left: 1.h),
-              child:CustomTextFormField(
-                        controller: passwordController, obscureText: true))
+              child: CustomTextFormField(
+                  controller: passwordController, obscureText: true))
         ]));
   }
 
@@ -127,18 +124,16 @@ class SignupMobScreenState extends State<SignupMobScreen> {
           SizedBox(height: 8.v),
           Align(
               alignment: Alignment.centerLeft,
-              child:CustomCheckboxButton(
-                        alignment: Alignment.centerLeft,
-                        text: "lbl_remember_me".tr,
-                        value: rememberMe,
-                        onChange: (value) {
-                        })
-                  ),
+              child: CustomCheckboxButton(
+                  alignment: Alignment.centerLeft,
+                  text: "lbl_remember_me".tr,
+                  value: rememberMe,
+                  onChange: (value) {})),
           SizedBox(height: 18.v),
           CustomElevatedButton(
-            onPressed: (){
-              _signIn();
-            },
+              onPressed: () {
+                _signIn();
+              },
               height: 35.v,
               text: "Login",
               margin: EdgeInsets.only(right: 9.h),
@@ -169,10 +164,10 @@ class SignupMobScreenState extends State<SignupMobScreen> {
           SizedBox(height: 12.v),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             CustomIconButton(
-              onTap: (){
-                print("signing in with google");
-                FirebaseAuthService().signInWitGoogle();
-              },
+                onTap: () {
+                  print("signing in with google");
+                  FirebaseAuthService().signInWitGoogle();
+                },
                 height: 41.adaptSize,
                 width: 41.adaptSize,
                 padding: EdgeInsets.all(6.h),
@@ -210,7 +205,6 @@ class SignupMobScreenState extends State<SignupMobScreen> {
             child: _buildFrameFive(context)));
   }
 
-
   onTapBtnFacebook(BuildContext context) async {
     await FacebookAuthHelper().facebookSignInProcess().then((facebookUser) {
       //TODO Actions to be performed after signin
@@ -220,7 +214,7 @@ class SignupMobScreenState extends State<SignupMobScreen> {
     });
   }
 
-void _signIn() async {
+  void _signIn() async {
     setState(() {
       _isSigning = true;
     });
@@ -235,17 +229,15 @@ void _signIn() async {
     });
 
     if (user != null) {
- ScaffoldMessenger.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("successfuly logged in")));
-          Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomepageMobScreen() ),
-    );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomepageMobScreen()),
+      );
     } else {
-   ScaffoldMessenger.of(context)
+      ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("invalid")));
-      }
+    }
   }
-
-
 }

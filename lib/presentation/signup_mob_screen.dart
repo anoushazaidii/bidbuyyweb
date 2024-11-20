@@ -238,6 +238,12 @@ class SignupMobScreenState extends State<SignupMobScreen> {
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("invalid")));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomepageMobScreen()),
+      );
     }
+
+    
   }
 }

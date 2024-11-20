@@ -298,6 +298,10 @@ void _signUp() async {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Could not create user")),
       );
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => SignupMobScreen()),
+      );
     }
   } catch (e) {
     setState(() {
